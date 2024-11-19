@@ -100,7 +100,7 @@
     <script>
         $(document).ready(function () {
             $("#searchForm").on("submit", function (e) {
-                e.preventDefault(); // Ngăn form reload trang
+                e.preventDefault(); 
                 const keyword = $("#searchInput").val();
 
                 $.ajax({
@@ -108,7 +108,7 @@
                     type: 'GET',
                     data: { keyword: keyword },
                     success: function (response) {
-                        $("#productResults").html(response); // Hiển thị kết quả trong div #productResults
+                        $("#productResults").html(response); 
                     },
                     error: function () {
                         alert("Có lỗi xảy ra. Vui lòng thử lại sau.");

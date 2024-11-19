@@ -50,16 +50,16 @@
         $.ajax({
             url: '/CartItem/AddToCart',
             type: 'POST',
-            data: { id: productId, soluong: 1 }, // Thêm với số lượng 1 (hoặc tùy chỉnh)
+            data: { id: productId, soluong: 1 }, 
             success: function (response) {
                 if (!response.success) {
-                    alert(response.message); // Hiển thị lỗi nếu không đủ số lượng
+                    alert(response.message);
                 } else {
-                    alert("Sản phẩm đã được thêm vào giỏ hàng!");
+                    alert("The product has been added to the cart!");
                 }
             },
             error: function () {
-                alert("Có lỗi xảy ra. Vui lòng thử lại sau.");
+                alert("An error occurred. Please try again later.");
             }
         });
     }

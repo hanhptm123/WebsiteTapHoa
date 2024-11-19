@@ -2,13 +2,10 @@
 
 <div class="row">
     <div class="hero__categories">
-        <!-- Tiêu đề danh mục -->
         <div class="hero__categories__all d-block align-items-center">
             <i class="fa fa-bars ms-3"></i>
             <span class="ml-2 me-3">All Categories</span>
         </div>
-
-        <!-- Các nút loại sản phẩm hiển thị theo chiều ngang -->
         <div id="categoryButtons" class="category-buttons mt-3" style="display: none; width: 100%; max-width: 600px;">
             <div class="d-flex flex-wrap">
                 @foreach (var item in Model)
@@ -27,7 +24,7 @@
 <script>
     $(document).ready(function () {
         $(".hero__categories__all").click(function () {
-            $("#categoryButtons").toggle(); // Hiển thị/ẩn các nút loại sản phẩm
+            $("#categoryButtons").toggle(); 
         });
     });
 
