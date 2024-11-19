@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Login.cshtml";
+}
+
+<head>
+    <link rel="stylesheet" href="~/css/login-form.css" />
+</head>
+
+<form asp-action="Login" asp-controller="Accounts" class="login-form">
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+    else if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success" role="alert" id="successMessage">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+    <h1 class="h4 text-gray-900 mb-4">LOGIN</h1>
+    <div class="form-group">
+        <label for="form3Example1">Username</label>
+        <input type="text" id="form3Example1" name="Tendangnhap" class="form-control form-control-lg" placeholder="Enter your username" required />
+    </div>
+
+    <div class="form-group">
+        <label for="form3Example2">Password</label>
+        <input type="password" id="form3Example2" name="Matkhau" class="form-control form-control-lg" placeholder="Enter password" required />
+    </div>
+
+    <div class="form-group text-center">
+        <button type="submit" class="btn btn-primary btn-lg">Login</button>
+        <p class="small mt-2">
+            Don't have an account? <a href="/Accounts/Register" class="link-danger">Register</a>
+        </p>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        // Check if there is a success message
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <text>
+                // Wait for 3 seconds and then redirect to the home page
+                setTimeout(function () {
+                    window.location.href = '@Url.Action("Index", "Home")'; // Redirect to the Index action of the Home controller
+                }, 3000); // Time duration to show the message (3 seconds)
+            </text>
+        }
+    </script>
+}
