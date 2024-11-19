@@ -54,5 +54,41 @@ namespace TapHoa.Controllers
             new ClaimsPrincipal(claimsIdentity));
             return RedirectToAction("Login");
         }
+        //Feature:Register
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Register(string Tendangnhap, string Matkhau, string MatkhauConfirm, string Chucvu)
+        {
+            if (string.IsNullOrEmpty(Tendangnhap) || string.IsNullOrEmpty(Matkhau) || string.IsNullOrEmpty(MatkhauConfirm))
+            {
+                TempData["ErrorMessage"] = "Please fill in all fields.";
+                return RedirectToAction("Register");
+            }
+            if (Matkhau != MatkhauConfirm)
+            {
+                TempData["ErrorMessage"] = "Password and Confirm Password must match.";
+                return RedirectToAction("Register");
+            }
+            var existingAccount = _context.Taikhoans.FirstOrDefault(t => t.Tendangnhap == Tendangnhap);
+            if (existingAccount != null)
+            {
+                TempData["ErrorMessage"] = "Username already exists.";
+                return RedirectToAction("Register");
+            }
+            var taikhoan = new Taikhoan
+            {
+                Tendangnhap = Tendangnhap,
+                Matkhau = Matkhau,
+                Chucvu = Chucvu
+            };
+            _context.Taikhoans.Add(taikhoan);
+            _context.SaveChanges();
+            TempData["SuccessMessage"] = "Registration successful! Redirecting to login...";
+            return RedirectToAction("Login");
+        }
     }
 }
