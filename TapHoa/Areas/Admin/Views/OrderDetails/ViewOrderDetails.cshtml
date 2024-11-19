@@ -1,0 +1,44 @@
+﻿@model IEnumerable<TapHoa.Data.Chitietdondathang>
+@{
+    ViewData["Title"] = "ViewOrderDetails";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<h1 class="text-center mb-4">ORDER DETAILS</h1>
+<div class="text-center" style="min-height: 50px;">
+    <div class="table-responsive" style="padding: 0 200px;">
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr class="text-center">
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Total Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.MaddhNavigation.Maddh)</td>
+                        <td>@Html.DisplayFor(modelItem => item.MaspNavigation.Tensp)</td>
+                        <td>
+                            <img src="@item.MaspNavigation.Hinhanh" asp-append-version="true" width="64px" height="64px" />
+                        </td>
+
+                        <td>@Html.DisplayFor(modelItem => item.MaspNavigation.Gia)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Soluong)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Thanhtien)</td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="text-center" style="min-height: 250px;">
+</div>
+
+
+
