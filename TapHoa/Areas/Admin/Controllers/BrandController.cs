@@ -24,16 +24,16 @@ namespace TapHoa.Areas.Admin.Controllers
             var lstTH = _context.Thuonghieus.AsNoTracking().OrderBy(x => x.Tenthuonghieu).ToPagedList(pageNumber, pageSize);
             return View(lstTH);
         }
-        [Route("Create")]
+        [Route("CreateBrand")]
         [HttpGet]
-        public IActionResult Create()
+        public IActionResult CreateBrand()
         {
             return View();
         }
-        [Route("Create")]
+        [Route("CreateBrand")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Thuonghieu TH)
+        public IActionResult CreateBrand(Thuonghieu TH)
         {
             if (ModelState.IsValid)
             {
