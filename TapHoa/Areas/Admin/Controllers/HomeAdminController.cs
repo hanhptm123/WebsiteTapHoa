@@ -24,17 +24,17 @@ namespace TapHoa.Areas.Admin.Controllers
         {
             return View();
         }
-        [Route("danhmucsanpham")]
-        public IActionResult DanhMucSanPham(int? page)
+        [Route("productlist")]
+        public IActionResult ProductList(int? page)
         {
             int pageSize = 8;
             int pageNumber = page == null || page < 1 ? 1 : page.Value;
             var lstsanpham = _context.Sanphams.AsNoTracking().OrderBy(x => x.Tensp).ToPagedList(pageNumber, pageSize);
             return View(lstsanpham);
         }
-        [Route("ThemSanPhamMoi")]
+        [Route("CreateProduct")]
         [HttpGet]
-        public IActionResult ThemSanPhamMoi()
+        public IActionResult CreateProduct()
         {
             ViewBag.Mathuonghieu = new SelectList(_context.Thuonghieus.ToList(), "Mathuonghieu", "Thuonghieu");
             ViewBag.Mancc = new SelectList(_context.Nhacungcaps.ToList(), "Mancc", "Tenncc");
@@ -42,22 +42,23 @@ namespace TapHoa.Areas.Admin.Controllers
             ViewBag.Makm = new SelectList(_context.Khuyenmais.ToList(), "Makm", "Phantramgiam");
             return View();
         }
-        [Route("ThemSanPhamMoi")]
+        [Route("CreateProduct")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ThemSanPhamMoi(Sanpham sanPham)
+        public IActionResult CreateProduct(Sanpham sanPham)
         {
             if (ModelState.IsValid)
             {
                 _context.Sanphams.Add(sanPham);
                 _context.SaveChanges();
-                return RedirectToAction("DanhMucSanPham");
+                TempData["Message"] = "Product created successfully";
+                return RedirectToAction("ProductList");
             }
             return View(sanPham);
         }
-        [Route("SuaSanPham")]
+        [Route("EditProduct")]
         [HttpGet]
-        public IActionResult SuaSanPham(int Masp)
+        public IActionResult EditProduct(int Masp)
         {
             ViewBag.Mathuonghieu = new SelectList(_context.Thuonghieus.ToList(), "Mathuonghieu", "Thuonghieu");
             ViewBag.Mancc = new SelectList(_context.Nhacungcaps.ToList(), "Mancc", "Tenncc");
@@ -66,22 +67,22 @@ namespace TapHoa.Areas.Admin.Controllers
             var sanPham = _context.Sanphams.Find(Masp);
             return View(sanPham);
         }
-        [Route("SuaSanPham")]
+        [Route("EditProduct")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SuaSanPham(Sanpham sanPham)
+        public IActionResult EditProduct(Sanpham sanPham)
         {
             if (ModelState.IsValid)
             {
                 _context.Update(sanPham);
                 _context.SaveChanges();
-                return RedirectToAction("DanhMucSanPham", "HomeAdmin");
+                return RedirectToAction("ProductList", "HomeAdmin");
             }
             return View(sanPham);
         }
-        [Route("XoaSanPham")]
+        [Route("DeleteProduct")]
         [HttpGet]
-        public IActionResult XoaSanPham(int Masp)
+        public IActionResult DeleteProduct(int Masp)
         {
             var sanPham = _context.Sanphams.Find(Masp);
 
@@ -93,14 +94,15 @@ namespace TapHoa.Areas.Admin.Controllers
             var hasRelatedRecords = _context.Ctphieunhaps.Any(ct => ct.Masp == Masp);
             if (hasRelatedRecords)
             {
-                TempData["ErrorMessage"] = "Không thể xóa sản phẩm vì có bản ghi liên quan.";
-                return RedirectToAction("DanhMucSanPham", "HomeAdmin");
+                TempData["ErrorMessage"] = "Cannot delete the product because it has related records.";
+                return RedirectToAction("ProductList", "HomeAdmin");
             }
 
             _context.Sanphams.Remove(sanPham);
             _context.SaveChanges();
+            TempData["Message"] = "The product has been successfully deleted.";
 
-            return RedirectToAction("DanhMucSanPham", "HomeAdmin");
+            return RedirectToAction("ProductList", "HomeAdmin");
         }
         [Route("danhmucloaisanpham")]
         public IActionResult DanhMucLoaiSanPham(int? page)
