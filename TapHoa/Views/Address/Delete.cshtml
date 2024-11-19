@@ -1,0 +1,21 @@
+@model TapHoa.Data.Diachi
+
+@{
+    ViewData["Title"] = "Xóa địa chỉ";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Xóa địa chỉ</h1>
+<p>Bạn có chắc chắn muốn xóa địa chỉ này không?</p>
+
+<div style="max-width: 600px; margin: auto; background: #f8f9fa; padding: 20px; border-radius: 10px;">
+    <p><strong>Người nhận:</strong> @Model.Tennguoinhan</p>
+    <p><strong>Số điện thoại:</strong> @Model.Sdt</p>
+    <p><strong>Địa chỉ:</strong> @Model.Diachi1</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Madc" />
+    <button type="submit" class="btn btn-danger">Xóa</button>
+    <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+</form>
