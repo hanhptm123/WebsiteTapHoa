@@ -1,0 +1,114 @@
+﻿@model IEnumerable<TapHoa.Data.Sanpham>
+@{
+    ViewData["Title"] = "Shoppage";
+    Layout = "~/Views/Shared/_Shop.cshtml";
+}
+<section class="product spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-5">
+                <div class="sidebar">
+                    <div class="sidebar__item">
+                        <h4>Categories</h4>
+                        <ul>
+                            <!-- Add your categories here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-7">
+                @await Component.InvokeAsync("Discount")
+
+                <!-- Sorting and Filters -->
+                <div class="filter__item">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-5">
+                            <div class="filter__sort">
+                                <span>Sort By</span>
+                                <select>
+                                    <option value="0">Default</option>
+                                    <option value="1">Price</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4">
+                            <div class="filter__found">
+                                <h6><span>@Model.Count()</span> Products found</h6>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Listing -->
+                @if (Model != null && Model.Any())
+                {
+                    <div class="row">
+                        @foreach (var item in Model)
+                        {
+                            <div class="col-lg-4 col-md-6 col-sm-6">
+                                <div class="product__item">
+                                    <div class="product__item__pic set-bg">
+                                        <img src="@item.Hinhanh" alt="Product Image" class="img-fluid">
+                                        <ul class="product__item__pic__hover">
+                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="javascript:void(0);" onclick="addToCart(@item.Masp)"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                    <div class="product__item__text">
+                                        <h6><a asp-action="Details" asp-controller="Sanphams" asp-route-id="@item.Masp">@item.Tensp</a></h6>
+                                        <div class="product__item__price">
+                                            @if (item.MakmNavigation != null)
+                                            {
+                                                <!-- Price after discount -->
+                                                <span>@(item.Gia * (1 - (decimal)(item.MakmNavigation.Phantramgiam / 100))).ToString("C")</span>
+                                                <span class="original-price">@item.Gia.ToString("C")</span> <!-- Original Price -->
+                                            }
+                                            else
+                                            {
+                                                <!-- No discount applied -->
+                                                <span>@item.Gia.ToString("C")</span>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div>No products available</div>
+                }
+
+                <!-- Pagination -->
+                <div class="product__pagination">
+                    <a href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <a href="#"><i class="fa fa-long-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    function addToCart(productId) {
+        $.ajax({
+            url: '/CartItem/AddToCart',
+            type: 'POST',
+            data: { id: productId, soluong: 1 }, // Add with quantity 1 (or customize as needed)
+            success: function (response) {
+                if (!response.success) {
+                    alert(response.message); // Show error if not enough stock
+                } else {
+                    alert("Product has been added to the cart!");
+                }
+            },
+            error: function () {
+                alert("An error occurred. Please try again later.");
+            }
+        });
+    }
+</script>
