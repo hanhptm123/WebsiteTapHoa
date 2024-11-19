@@ -104,44 +104,45 @@ namespace TapHoa.Areas.Admin.Controllers
 
             return RedirectToAction("ProductList", "HomeAdmin");
         }
-        [Route("danhmucloaisanpham")]
-        public IActionResult DanhMucLoaiSanPham(int? page)
+        [Route("categorylist")]
+        public IActionResult CategoryList(int? page)
         {
             int pageSize = 8;
             int pageNumber = page == null || page < 1 ? 1 : page.Value;
             var lstloaisanpham = _context.Loaisps.AsNoTracking().OrderBy(x => x.Tenloaisp).ToPagedList(pageNumber, pageSize);
             return View(lstloaisanpham);
         }
-        [Route("ThemLoai")]
+        [Route("CreateCategory")]
         [HttpGet]
-        public IActionResult ThemLoai()
+        public IActionResult CreateCategory()
         {
             return View();
         }
 
-        [Route("ThemLoai")]
+        [Route("CreateCategory")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ThemLoai(Loaisp lSanPham)
+        public IActionResult CreateCategory(Loaisp lSanPham)
         {
             if (ModelState.IsValid)
             {
                 var existingLoai = _context.Loaisps.FirstOrDefault(x => x.Tenloaisp == lSanPham.Tenloaisp);
                 if (existingLoai != null)
                 {
-                    ModelState.AddModelError("Tenloaisp", "Loại sản phẩm này đã tồn tại.");
+                    ModelState.AddModelError("Tenloaisp", "This product category already exists.");
                     return View(lSanPham);
                 }
 
                 _context.Loaisps.Add(lSanPham);
                 _context.SaveChanges();
-                return RedirectToAction("DanhMucLoaiSanPham");
+                TempData["Message"] = "Category created successfully";
+                return RedirectToAction("CategoryList");
             }
             return View(lSanPham);
         }
-        [Route("SuaLoai")]
+        [Route("EditCategory")]
         [HttpGet]
-        public IActionResult SuaLoai(int Maloaisp)
+        public IActionResult EditCategory(int Maloaisp)
         {
             var lSanPham = _context.Loaisps.Find(Maloaisp);
 
@@ -153,10 +154,10 @@ namespace TapHoa.Areas.Admin.Controllers
             return View(lSanPham);
         }
 
-        [Route("SuaLoai")]
+        [Route("EditCategory")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult SuaLoai([Bind("Maloaisp,Tenloaisp")] Loaisp lSanPham)
+        public IActionResult EditCategory([Bind("Maloaisp,Tenloaisp")] Loaisp lSanPham)
         {
             if (ModelState.IsValid)
             {
@@ -164,18 +165,18 @@ namespace TapHoa.Areas.Admin.Controllers
                 {
                     _context.Update(lSanPham);
                     _context.SaveChanges();
-                    return RedirectToAction("DanhMucLoaiSanPham", "HomeAdmin");
+                    return RedirectToAction("CategoryList", "HomeAdmin");
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", "Có lỗi xảy ra khi lưu dữ liệu: " + ex.Message);
+                    ModelState.AddModelError("", "An error occurred while saving data: " + ex.Message);
                 }
             }
             return View(lSanPham);
         }
-        [Route("XoaLoai")]
+        [Route("DeleteCategory")]
         [HttpGet]
-        public IActionResult XoaLoai(int Maloaisp)
+        public IActionResult DeleteCategory(int Maloaisp)
         {
             var lSanPham = _context.Loaisps.Find(Maloaisp);
 
@@ -187,14 +188,15 @@ namespace TapHoa.Areas.Admin.Controllers
             var hasRelatedRecords = _context.Sanphams.Any(ct => ct.Maloaisp == Maloaisp);
             if (hasRelatedRecords)
             {
-                TempData["ErrorMessage"] = "Không thể xóa loại sản phẩm vì có bản ghi liên quan.";
-                return RedirectToAction("DanhMucLoaiSanPham", "HomeAdmin");
+                TempData["ErrorMessage"] = "Cannot delete the category product because it has related records.";
+                return RedirectToAction("CategoryList", "HomeAdmin");
             }
 
             _context.Loaisps.Remove(lSanPham);
             _context.SaveChanges();
+            TempData["Message"] = "The category has been successfully deleted.";
 
-            return RedirectToAction("DanhMucLoaiSanPham", "HomeAdmin");
+            return RedirectToAction("CategoryList", "HomeAdmin");
         }
 
 
