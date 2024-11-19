@@ -61,7 +61,7 @@
                                             @if (item.MakmNavigation != null)
                                             {
                                                 <!-- Price after discount -->
-                                                <span>@(item.Gia * (1 - (item.MakmNavigation.Phantramgiam / 100))).ToString("C")</span>
+                                                <span>@(item.Gia * (1 - (decimal)(item.MakmNavigation.Phantramgiam / 100))).ToString("C")</span>
                                                 <span class="original-price">@item.Gia.ToString("C")</span> <!-- Original Price -->
                                             }
                                             else
