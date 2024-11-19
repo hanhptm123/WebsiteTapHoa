@@ -1,18 +1,17 @@
 @{
-    ViewData["Title"] = "Danh sách địa chỉ";
+    ViewData["Title"] = "Address List";
     Layout = "~/Views/Shared/_Layout.cshtml"; 
 }
 
-<h1>Địa chỉ của tôi</h1>
-<a asp-action="Create" class="btn btn-primary">+ Thêm địa chỉ mới</a>
+<h1>My Addresses</h1>
+<a asp-action="Create" class="btn btn-primary">+ Add New Address</a>
 
 <table class="table mt-3">
     <thead>
         <tr>
-            <th>Tên người nhận</th>
-            <th>Số điện thoại</th>
-            <th>Địa chỉ</th>
-            <th>Hành động</th>
+            <th>Recipient Name</th>
+            <th>Phone Number</th>
+            <th>Address</th>
         </tr>
     </thead>
     <tbody>
@@ -23,8 +22,8 @@
                 <td>@address.Sdt</td>
                 <td>@address.Diachi1</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@address.Madc" class="btn btn-warning btn-sm">Cập nhật</a>
-                    <a asp-action="Delete" asp-route-id="@address.Madc" class="btn btn-danger btn-sm">Xóa</a>
+                    <a asp-action="Edit" asp-route-id="@address.Madc" class="btn btn-warning btn-sm">Update</a>
+                    <a asp-action="Delete" asp-route-id="@address.Madc" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         }

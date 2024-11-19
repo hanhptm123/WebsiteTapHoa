@@ -7,17 +7,17 @@ namespace TapHoa.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // Chỉ cho phép người dùng đã đăng nhập
+    [Authorize] // Only allow authenticated users
     public class AddressController : ControllerBase
     {
         private readonly TapHoaContext _context;
 
-        public AddressApiController(TapHoaContext context)
+        public AddressController(TapHoaContext context)
         {
             _context = context;
         }
 
-        // Lấy danh sách Tỉnh/Thành phố
+        // Get list of Provinces/Regions
         [HttpGet("GetProvinces")]
         public IActionResult GetProvinces()
         {
@@ -27,7 +27,7 @@ namespace TapHoa.Controllers
             return Ok(provinces);
         }
 
-        // Lấy danh sách Quận/Huyện theo Tỉnh/Thành phố
+        // Get list of Districts by Province/Region
         [HttpGet("GetDistricts/{provinceId}")]
         public IActionResult GetDistricts(int provinceId)
         {
@@ -38,7 +38,7 @@ namespace TapHoa.Controllers
             return Ok(districts);
         }
 
-        // Lấy danh sách Phường/Xã theo Quận/Huyện
+        // Get list of Wards by District
         [HttpGet("GetWards/{districtId}")]
         public IActionResult GetWards(int districtId)
         {
@@ -49,11 +49,11 @@ namespace TapHoa.Controllers
             return Ok(wards);
         }
 
-        // Lấy danh sách địa chỉ của khách hàng
+        // Get list of customer addresses
         [HttpGet("GetAddresses")]
         public IActionResult GetAddresses()
         {
-            // Lấy thông tin người dùng hiện tại
+            // Get current user information
             var customerId = GetCurrentUserId();
 
             var addresses = _context.Diachis
@@ -70,13 +70,13 @@ namespace TapHoa.Controllers
             return Ok(addresses);
         }
 
-        // Thêm địa chỉ mới
+        // Add a new address
         [HttpPost("AddAddress")]
         public IActionResult AddAddress([FromBody] Diachi address)
         {
             if (address == null)
             {
-                return BadRequest("Thông tin địa chỉ không hợp lệ.");
+                return BadRequest("Invalid address information.");
             }
 
             var customerId = GetCurrentUserId();
@@ -85,10 +85,10 @@ namespace TapHoa.Controllers
             _context.Diachis.Add(address);
             _context.SaveChanges();
 
-            return Ok("Địa chỉ đã được thêm thành công.");
+            return Ok("Address has been successfully added.");
         }
 
-        // Cập nhật địa chỉ
+        // Update an existing address
         [HttpPut("UpdateAddress/{id}")]
         public IActionResult UpdateAddress(int id, [FromBody] Diachi updatedAddress)
         {
@@ -96,7 +96,7 @@ namespace TapHoa.Controllers
 
             if (existingAddress == null)
             {
-                return NotFound("Địa chỉ không tồn tại hoặc bạn không có quyền sửa.");
+                return NotFound("Address does not exist or you do not have permission to edit it.");
             }
 
             existingAddress.Tennguoinhan = updatedAddress.Tennguoinhan;
@@ -106,10 +106,10 @@ namespace TapHoa.Controllers
             _context.Entry(existingAddress).State = EntityState.Modified;
             _context.SaveChanges();
 
-            return Ok("Địa chỉ đã được cập nhật.");
+            return Ok("Address has been updated.");
         }
 
-        // Xóa địa chỉ
+        // Delete an address
         [HttpDelete("DeleteAddress/{id}")]
         public IActionResult DeleteAddress(int id)
         {
@@ -117,24 +117,24 @@ namespace TapHoa.Controllers
 
             if (address == null)
             {
-                return NotFound("Địa chỉ không tồn tại hoặc bạn không có quyền xóa.");
+                return NotFound("Address does not exist or you do not have permission to delete it.");
             }
 
             _context.Diachis.Remove(address);
             _context.SaveChanges();
 
-            return Ok("Địa chỉ đã được xóa.");
+            return Ok("Address has been deleted.");
         }
 
-        // Phương thức để lấy ID của người dùng hiện tại
+        // Method to get the current user ID
         private int GetCurrentUserId()
         {
             if (User.Identity?.IsAuthenticated ?? false)
             {
-                // Giả sử User.Identity.Name chứa CustomerId
+                // Assume User.Identity.Name contains the CustomerId
                 return int.Parse(User.Identity.Name ?? "0");
             }
-            throw new UnauthorizedAccessException("Người dùng chưa đăng nhập.");
+            throw new UnauthorizedAccessException("User is not logged in.");
         }
     }
 }
