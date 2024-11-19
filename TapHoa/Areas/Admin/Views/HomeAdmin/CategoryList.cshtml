@@ -79,7 +79,7 @@
     </tbody>
 </table>
 <div class="product__pagination">
-    @Html.PagedListPager(Model, page => Url.Action("ProductList", new { page = page }), new X.PagedList.Mvc.Core.PagedListRenderOptions
+    @Html.PagedListPager(Model, page => Url.Action("CategoryList", new { page = page }), new X.PagedList.Mvc.Core.PagedListRenderOptions
 {
     LiElementClasses = new List<string> { "page-item" },
     PageClasses = new List<string> { "page-link" }
