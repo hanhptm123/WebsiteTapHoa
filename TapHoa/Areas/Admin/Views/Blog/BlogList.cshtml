@@ -46,8 +46,19 @@
         {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.Tenbv)</td>
-                <td>@Html.DisplayFor(modelItem => item.Noidung)</td>
-                <td>@Html.DisplayFor(modelItem => item.Ngaydang)</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Noidung))
+                    {
+                        @Html.Raw(item.Noidung.Length > 100
+                                 ? item.Noidung.Substring(0, 100) + "..."
+                                 : item.Noidung)
+                    }
+                    else
+                    {
+                        <span>No Content</span>
+                    }
+                </td>
+                <td>@item.Ngaydang.ToString("dd/MM/yyyy")</td>
                 <td>
                     @if (!string.IsNullOrEmpty(item.Hinhanh))
                     {
@@ -70,6 +81,7 @@
         }
     </tbody>
 </table>
+
 
 <div class="d-flex justify-content-center">
     @Html.PagedListPager(Model, page => Url.Action("BlogList", new { page = page }), new X.PagedList.Mvc.Core.PagedListRenderOptions
