@@ -1,73 +1,39 @@
 @model TapHoa.Data.Diachi
 
 @{
-    ViewData["Title"] = "Add New Address";
-    Layout = "~/Views/Shared/_Layout.cshtml"; 
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_User.cshtml";
 }
 
-<h1>Add New Address</h1>
+<h3>Create Address</h3>
 
-<form asp-action="Create" method="post" style="max-width: 600px; margin: auto;">
-    <div class="form-group">
-        <label for="Tennguoinhan">Full Name</label>
-        <input asp-for="Tennguoinhan" class="form-control" id="Tennguoinhan" required />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Tennguoinhan" class="control-label">Recipient Name</label>
+                <input asp-for="Tennguoinhan" class="form-control" />
+                <span asp-validation-for="Tennguoinhan" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Sdt" class="control-label">PhoneNumber</label>
+                <input asp-for="Sdt" class="form-control" />
+                <span asp-validation-for="Sdt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Diachi1" class="control-label">Address</label>
+                <input asp-for="Diachi1" class="form-control" />
+                <span asp-validation-for="Diachi1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
     </div>
-    <div class="form-group">
-        <label for="Sdt">Phone Number</label>
-        <input asp-for="Sdt" class="form-control" id="Sdt" required />
-    </div>
-    <div class="form-group">
-        <label for="Province">Province/City</label>
-        <select id="Province" class="form-control"></select>
-    </div>
-    <div class="form-group">
-        <label for="District">District</label>
-        <select id="District" class="form-control"></select>
-    </div>
-    <div class="form-group">
-        <label for="Ward">Ward/Commune</label>
-        <select id="Ward" class="form-control"></select>
-    </div>
-    <div class="form-group">
-        <label for="Diachi1">Detailed Address</label>
-        <input asp-for="Diachi1" class="form-control" id="Diachi1" required />
-    </div>
-    <button type="submit" class="btn btn-primary">Complete</button>
-    <a asp-action="Index" class="btn btn-secondary">Back</a>
-</form>
+</div>
 
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            // Get list of provinces/cities
-            $.getJSON('/api/AddressApi/GetProvinces', function (data) {
-                $('#Province').empty().append('<option>Select Province/City</option>');
-                data.forEach(function (item) {
-                    $('#Province').append('<option value="' + item.id + '">' + item.name + '</option>');
-                });
-            });
+<div>
+    <a asp-action="AddressList">Go back</a>
+</div>
 
-            // Get list of districts based on selected province/city
-            $('#Province').change(function () {
-                var provinceId = $(this).val();
-                $.getJSON('/api/AddressApi/GetDistricts/' + provinceId, function (data) {
-                    $('#District').empty().append('<option>Select District</option>');
-                    data.forEach(function (item) {
-                        $('#District').append('<option value="' + item.id + '">' + item.name + '</option>');
-                    });
-                });
-            });
-
-            // Get list of wards based on selected district
-            $('#District').change(function () {
-                var districtId = $(this).val();
-                $.getJSON('/api/AddressApi/GetWards/' + districtId, function (data) {
-                    $('#Ward').empty().append('<option>Select Ward/Commune</option>');
-                    data.forEach(function (item) {
-                        $('#Ward').append('<option value="' + item.id + '">' + item.name + '</option>');
-                    });
-                });
-            });
-        });
-    </script>
-}

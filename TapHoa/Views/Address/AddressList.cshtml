@@ -1,0 +1,53 @@
+@model IEnumerable<TapHoa.Data.Diachi>
+
+@{
+    ViewData["Title"] = "AddressList";
+    Layout = "~/Views/Shared/_User.cshtml";
+}
+
+<h3>AddressList</h3>
+
+<p>
+    <a mrthod="post" asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Recipient Name
+            </th>
+            <th>
+                PhoneNumber
+            </th>
+            <th>
+                Address
+            </th>
+            <th>
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tennguoinhan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Sdt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Diachi1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MakhNavigation.Makh)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-Madc="@item.Madc">Edit</a> |
+                    <a asp-action="Details" asp-route-Madc="@item.Madc">Details</a> |
+                    <a asp-action="Delete" asp-route-Madc="@item.Madc">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
