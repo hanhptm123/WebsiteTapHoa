@@ -1,74 +1,57 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TapHoa.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using X.PagedList;
+using X.PagedList.Extensions;
 
-namespace TapHoa.Controllers
+namespace TapHoa.Areas.Admin.Controllers
 {
+    [Route("customer")]
     public class CustomerController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly TaphoaContext _context;
 
-        public CustomerController(ApplicationDbContext context)
+        public CustomerController(TaphoaContext context)
         {
             _context = context;
         }
 
-        // GET: Customer/Index
-        public async Task<IActionResult> Index()
+        [Route("CustomerList")]
+        public IActionResult CustomerList(int? page)
         {
-            var customers = await _context.Khachhang.ToListAsync();
+            int pageSize = 8;
+            int pageNumber = page == null || page < 1 ? 1 : page.Value;
+            var customers = _context.Khachhangs.AsNoTracking().OrderBy(x => x.Makh).ToPagedList(pageNumber, pageSize);
             return View(customers);
         }
 
-        // GET: Customer/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context.Khachhang
-                .FirstOrDefaultAsync(m => m.Makh == id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            return View(customer);
-        }
-
-        // GET: Customer/Create
+        [Route("Create")]
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Customer/Create
+        [Route("Create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Makh, Tenkh, Email, Sdt, Diachi")] Khachhang customer)
+        public IActionResult Create(Khachhang customer)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(customer);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                _context.Khachhangs.Add(customer);
+                _context.SaveChanges();
+                TempData["Message"] = "Customer created successfully";
+                return RedirectToAction("CustomerList");
             }
             return View(customer);
         }
 
-        // GET: Customer/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        [Route("Edit")]
+        [HttpGet]
+        public IActionResult Edit(int Makh)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context.Khachhang.FindAsync(id);
+            var customer = _context.Khachhangs.Find(Makh);
             if (customer == null)
             {
                 return NotFound();
@@ -76,71 +59,36 @@ namespace TapHoa.Controllers
             return View(customer);
         }
 
-        // POST: Customer/Edit/5
+        [Route("Edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Makh, Tenkh, Email, Sdt, Diachi")] Khachhang customer)
+        public IActionResult Edit(Khachhang customer)
         {
-            if (id != customer.Makh)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!KhachhangExists(customer.Makh))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Update(customer);
+                _context.SaveChanges();
+                TempData["Message"] = "Customer updated successfully";
+                return RedirectToAction("CustomerList");
             }
             return View(customer);
         }
 
-        // GET: Customer/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [Route("Delete")]
+        [HttpGet]
+        public IActionResult Delete(int Makh)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var customer = _context.Khachhangs.Find(Makh);
 
-            var customer = await _context.Khachhang
-                .FirstOrDefaultAsync(m => m.Makh == id);
             if (customer == null)
             {
                 return NotFound();
             }
 
-            return View(customer);
-        }
-
-        // POST: Customer/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var customer = await _context.Khachhang.FindAsync(id);
-            _context.Khachhang.Remove(customer);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool KhachhangExists(int id)
-        {
-            return _context.Khachhang.Any(e => e.Makh == id);
+            _context.Khachhangs.Remove(customer);
+            _context.SaveChanges();
+            TempData["Message"] = "Customer deleted successfully";
+            return RedirectToAction("CustomerList");
         }
     }
 }
