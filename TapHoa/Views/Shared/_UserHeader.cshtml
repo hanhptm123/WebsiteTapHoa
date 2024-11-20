@@ -80,6 +80,12 @@
                             }
                         </div>
                         <div class="header__top__right__auth">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <a href="/address/addressList"><i class="fa fa-user"></i> Address</a>
+                            }
+                        </div>
+                        <div class="header__top__right__auth">
                             @if (!User.Identity.IsAuthenticated)
                             {
                                 <a href="/Accounts/Login"><i class="fa fa-user"></i> Login</a>

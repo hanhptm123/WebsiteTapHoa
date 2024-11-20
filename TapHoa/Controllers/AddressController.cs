@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TapHoa.Data;
@@ -25,13 +26,14 @@ namespace TapHoa.Areas.Admin.Controllers
             return View(addresses);
         }
 
+        [Authorize(Roles = "Administration")]
         [Route("Create")]
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
-
+        [Authorize(Roles = "Administration")]
         [Route("Create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
