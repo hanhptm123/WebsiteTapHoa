@@ -49,5 +49,27 @@ namespace TapHoa.Controllers
             // Trả về view danh sách sản phẩm
             return View(products);
         }
+        // GET: Sanphams/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var sanpham = await _context.Sanphams
+                .Include(s => s.MakmNavigation)
+                .Include(s => s.MaloaispNavigation)
+                .Include(s => s.ManccNavigation)
+                .Include(s => s.MathNavigation)
+                .FirstOrDefaultAsync(m => m.Masp == id);
+
+            if (sanpham == null)
+            {
+                return NotFound();
+            }
+
+            return View(sanpham);
+        }
     }
 }
