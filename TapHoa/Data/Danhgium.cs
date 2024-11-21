@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace TapHoa.Data;
 
-public partial class Danhgium
+public partial class Danhgia
 {
     public int Madg { get; set; }
 
