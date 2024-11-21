@@ -11,6 +11,8 @@ public partial class Ctphieunhap
 
     public int Soluong { get; set; }
 
+    public decimal? Gia { get; set; }
+
     public decimal Thanhtien { get; set; }
 
     public virtual Phieunhap MapnNavigation { get; set; } = null!;

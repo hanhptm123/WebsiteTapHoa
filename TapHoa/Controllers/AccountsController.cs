@@ -32,28 +32,75 @@ namespace TapHoa.Controllers
             HttpContext.SignOutAsync();
             return View("Login");
         }
+        //[HttpPost]
+        //public IActionResult Login(string Tendangnhap, string Matkhau)
+        //{
+        //    var taikhoan = _context.Taikhoans.Where(t => t.Tendangnhap == Tendangnhap && t.Matkhau == Matkhau).FirstOrDefault<Taikhoan>();
+        //    if (taikhoan == null)
+        //    {
+        //        TempData["ErrorMessage"] = "Invalid username or password.";
+        //        return RedirectToAction("Login");
+        //    }
+        //    TempData["SuccessMessage"] = "Login successful! Redirecting...";
+        //    var claims = new List<Claim>
+        //    {
+        //        new Claim(ClaimTypes.Name, taikhoan.Tendangnhap),
+        //        new Claim(ClaimTypes.Role, taikhoan.Chucvu),
+        //    };
+        //    var claimsIdentity = new ClaimsIdentity(
+        //    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        //    HttpContext.SignInAsync(
+        //    CookieAuthenticationDefaults.AuthenticationScheme,
+        //    new ClaimsPrincipal(claimsIdentity));
+        //    return RedirectToAction("Login");
+        //}
         [HttpPost]
         public IActionResult Login(string Tendangnhap, string Matkhau)
         {
-            var taikhoan = _context.Taikhoans.Where(t => t.Tendangnhap == Tendangnhap && t.Matkhau == Matkhau).FirstOrDefault<Taikhoan>();
+            var taikhoan = _context.Taikhoans.FirstOrDefault(t => t.Tendangnhap == Tendangnhap && t.Matkhau == Matkhau);
             if (taikhoan == null)
             {
                 TempData["ErrorMessage"] = "Invalid username or password.";
                 return RedirectToAction("Login");
             }
-            TempData["SuccessMessage"] = "Login successful! Redirecting...";
+
+            // Kiểm tra chức vụ
+            if (taikhoan.Chucvu == "Nhanvien")
+            {
+                var nhanvien = _context.Nhanviens.FirstOrDefault(nv => nv.Matk == taikhoan.Matk);
+                if (nhanvien != null)
+                {
+                    // Lưu mã nhân viên vào session
+                    HttpContext.Session.SetInt32("NhanvienId", nhanvien.Manv);
+                }
+            }
+            else
+            {
+                var khachhang = _context.Khachhangs.FirstOrDefault(kh => kh.Matk == taikhoan.Matk);
+                if (khachhang != null)
+                {
+                    // Lưu mã khách hàng vào session
+                    HttpContext.Session.SetInt32("NewCustomerId", khachhang.Makh);
+                }
+            }
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, taikhoan.Tendangnhap),
                 new Claim(ClaimTypes.Role, taikhoan.Chucvu),
             };
+
             var claimsIdentity = new ClaimsIdentity(
-            claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
             HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(claimsIdentity));
-            return RedirectToAction("Login");
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+
+            // Điều hướng đến trang chính (home)
+            return RedirectToAction("Index", "Home");
         }
+
         //Feature:Register
         [HttpGet]
         public IActionResult Register()

@@ -55,8 +55,6 @@ public partial class TaphoaContext : DbContext
 
     public virtual DbSet<Trangthaidondathang> Trangthaidondathangs { get; set; }
 
-    
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Baiviet>(entity =>
@@ -135,6 +133,9 @@ public partial class TaphoaContext : DbContext
 
             entity.Property(e => e.Masp).HasColumnName("MASP");
             entity.Property(e => e.Mapn).HasColumnName("MAPN");
+            entity.Property(e => e.Gia)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("GIA");
             entity.Property(e => e.Soluong).HasColumnName("SOLUONG");
             entity.Property(e => e.Thanhtien)
                 .HasColumnType("decimal(18, 2)")
