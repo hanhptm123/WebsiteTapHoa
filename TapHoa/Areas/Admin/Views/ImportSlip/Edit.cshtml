@@ -72,7 +72,7 @@
 @section Scripts {
     @await Html.PartialAsync("_ValidationScriptsPartial")
 
-    <script>
+<script>
         const productPrices = @Html.Raw(Json.Serialize(ViewBag.ProductPrices));
 
         function updatePrice(rowIndex) {
