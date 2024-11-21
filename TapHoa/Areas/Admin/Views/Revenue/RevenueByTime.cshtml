@@ -1,0 +1,38 @@
+@model IEnumerable<dynamic>
+
+@{
+    ViewData["Title"] = "Revenue by Time";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="get">
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" value="@Request.Query["startDate"]" />
+    
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" value="@Request.Query["endDate"]" />
+    
+    <button type="submit">Filter</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Invoice ID</th>
+            <th>Payment Date</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Mahd</td>
+                <td>@item.Ngaythanhtoan?.ToString("dd/MM/yyyy")</td>
+                <td>@item.Total.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
