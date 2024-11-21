@@ -1,0 +1,55 @@
+﻿@model IEnumerable<TapHoa.Data.Ctphieunhap>
+@{
+    ViewData["Title"] = "Receipt Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1 class="text-center my-4">Receipt Details</h1>
+
+<div class="container">
+    <hr />
+    @if (Model != null && Model.Any())
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Product Image</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <!-- Hiển thị hình ảnh sản phẩm -->
+                            @if (!string.IsNullOrEmpty(item.MaspNavigation.Hinhanh))
+                            {
+                                <img src="@item.MaspNavigation.Hinhanh" alt="Product Image" class="img-fluid" style="width: 100px; height: auto;" />
+                            }
+                            else
+                            {
+                                <span>No Image</span>
+                            }
+                        </td>
+                        <td>@item.MaspNavigation.Tensp</td>
+                        <td>@item.Soluong</td>
+                        <td>@string.Format("{0:C}", item.Gia)</td>
+                        <td>@string.Format("{0:C}", item.Thanhtien)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p class="text-center text-danger">No receipt details found for this receipt.</p>
+    }
+</div>
+
+<div class="d-flex justify-content-center mt-4">
+    <a asp-action="Index" asp-controller="Receipt" class="btn btn-primary">Back to List</a>
+</div>

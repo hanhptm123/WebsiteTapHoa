@@ -32,7 +32,7 @@
                     <a asp-action="Details" asp-route-id="@item.Maddh" class="btn btn-info btn-sm">View</a>
                     <a asp-action="EditStatus" asp-route-id="@item.Maddh" class="btn btn-warning btn-sm">Update Status</a>
                     <a href="@Url.Action("ViewOrderDetails", "OrderDetails", new { id = item.Maddh })" class="btn btn-secondary btn-sm">
-                        Chi Tiết
+                        Details
                     </a>
                 </td>
             </tr>

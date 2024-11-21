@@ -1,0 +1,48 @@
+﻿@model IEnumerable<TapHoa.Data.Phieunhap>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Ngaynhap)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tongtien)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ManvNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ngaynhap)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tongtien)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ManvNavigation.Manv)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Mapn">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Mapn">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Mapn">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
