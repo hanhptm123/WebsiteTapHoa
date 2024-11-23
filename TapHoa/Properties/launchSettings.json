@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-﻿{
-=======
 {
->>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "iisSettings": {
     "windowsAuthentication": false,
@@ -15,37 +11,21 @@
   "profiles": {
     "http": {
       "commandName": "Project",
-<<<<<<< HEAD
       "dotnetRunMessages": true,
-=======
->>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
       "launchBrowser": true,
       "applicationUrl": "http://localhost:5243",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-<<<<<<< HEAD
       }
     },
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-=======
-      },
-      "dotnetRunMessages": true
-    },
-    "https": {
-      "commandName": "Project",
->>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7058;http://localhost:5243",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-<<<<<<< HEAD
       }
-=======
-      },
-      "dotnetRunMessages": true
->>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -55,8 +35,4 @@
       }
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
