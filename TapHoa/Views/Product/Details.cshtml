@@ -9,6 +9,14 @@
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
+<<<<<<< HEAD
+                        <img class="product__details__pic__item--large" src="@Model.Hinhanh" alt="0">
+                    </div>
+                    <div class="product__details__pic__slider owl-carousel">
+                        <img data-imgbigurl="@Model.Hinhanh1" src="@Model.Hinhanh1" alt="1">
+                        <img data-imgbigurl="@Model.Hinhanh2" src="@Model.Hinhanh2" alt="2">
+                        <img data-imgbigurl="@Model.Hinhanh3" src="@Model.Hinhanh3" alt="3">
+=======
                         <img class="product__details__pic__item--large"
                              src="@Model.Hinhanh" alt="0">
                     </div>
@@ -19,19 +27,28 @@
                              src="@Model.Hinhanh2" alt="2">
                         <img data-imgbigurl="@Model.Hinhanh3"
                              src="@Model.Hinhanh3" alt="3">
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
                     <h3>@Model.Tensp</h3>
+<<<<<<< HEAD
+=======
                    
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
                     <div class="product__details__price">
                         @* Kiểm tra nếu có giảm giá *@
                         @{
                             decimal originalPrice = Model.Gia;
+<<<<<<< HEAD
+                            decimal discountPercentage = (decimal)(Model.MakmNavigation?.Phantramgiam ?? 0);
+                            decimal discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100));
+=======
                             decimal discountPercentage = (decimal)(Model.MakmNavigation?.Phantramgiam ?? 0); // Kiểm tra mã giảm giá
                             decimal discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100)); // Tính giá sau khi giảm
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
                         }
 
                         @* Hiển thị giá gốc với đường gạch ngang nếu có giảm giá *@
@@ -44,15 +61,24 @@
                         @discountedPrice.ToString("C")
                     </div>
 
+<<<<<<< HEAD
+                    <p>@Model.Mota</p>
+                    <form method="post" asp-action="AddToCart" asp-controller="Cart">
+=======
                     <p>
                         @Model.Mota
                     </p>
                     <form asp-action="AddToCart" asp-controller="CartItem" method="get">
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
                         <input type="hidden" name="id" value="@Model.Masp" />
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
+<<<<<<< HEAD
+                                    <input id="quantityInput" name="quantity" type="number" min="1" value="1" />
+=======
                                     <input id="quantityInput" name="soluong" type="number" min="1" value="1" />
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
                                 </div>
                             </div>
                         </div>
@@ -60,6 +86,10 @@
                     </form>
 
 
+<<<<<<< HEAD
+
+=======
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
                     <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                     <ul>
                         <li><b>Availability</b> <span>In Stock</span></li>
@@ -77,6 +107,8 @@
                     </ul>
                 </div>
             </div>
+<<<<<<< HEAD
+=======
             <div class="col-lg-12">
                 <div class="product__details__tab">
                     <ul class="nav nav-tabs" role="tablist">
@@ -97,6 +129,7 @@
                     </div>
                 </div>
             </div>
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
         </div>
     </div>
 </section>
@@ -111,17 +144,29 @@
             </div>
         </div>
         <div class="row">
+<<<<<<< HEAD
+            <div class="col-lg-3 col-md-4 col-sm-6">
+=======
               <div class="col-lg-3 col-md-4 col-sm-6">
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
                 <div class="product__item">
                     <div class="product__item__pic set-bg" data-setbg="@Model.Hinhanh">
                         <ul class="product__item__pic__hover">
                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+<<<<<<< HEAD
+                            <li><a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Masp"><i class="fa fa-shopping-cart"></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__item__text">
+                        <h6><a asp-action="Details" asp-controller="Product" asp-route-id="@Model">@Model.Tensp</a></h6>
+=======
                             <li><a asp-action="AddToCart" asp-controller="CartItem" asp-route-id="@Model.Masp"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
                     <div class="product__item__text">
                         <h6><a asp-action="Details" asp-controller="Sanphams" asp-route-id="@Model">@Model.Tensp</a></h6>
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
                         <h5>@Model.Gia.ToString("C")</h5>
                     </div>
                 </div>
@@ -129,9 +174,47 @@
         </div>
     </div>
 </section>
+<<<<<<< HEAD
+
+<script>
+    function addToCartWithQuantity(event) {
+        event.preventDefault();
+
+        var form = document.getElementById('addToCartForm');
+        var quantity = form.querySelector('input[name="quantity"]').value;
+        var productId = form.querySelector('input[name="id"]').value;
+
+        // Gửi yêu cầu AJAX đến controller AddToCart
+        $.ajax({
+            url: '@Url.Action("AddToCart", "Cart")',  // URL action AddToCart trong controller Cart
+            type: 'POST',
+            data: {
+                id: productId,
+                quantity: quantity
+            },
+            success: function (response) {
+                // Cập nhật lại giỏ hàng sau khi thêm thành công
+                updateCartDisplay(response); // Hàm cập nhật giỏ hàng trên giao diện
+            },
+            error: function (xhr, status, error) {
+                alert("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.");
+            }
+        });
+    }
+
+    function updateCartDisplay(cartData) {
+        // Cập nhật giao diện giỏ hàng với dữ liệu mới từ server
+        // Ví dụ: cập nhật số lượng và tổng giỏ hàng
+        $('#cartQuantity').text(cartData.totalQuantity);
+        $('#cartTotal').text(cartData.totalPrice);
+    }
+
+</script>
+=======
 <script>
     function addToCartWithQuantity() {
         var quantity = document.getElementById("quantityInput").value;
         window.location.href = `@Url.Action("AddToCart", "CartItem")?id=@Model.Masp&soluong=${quantity}`;
     }
 </script>
+>>>>>>> f75a1c2ad8e9004836079902798b6d5c2c78273f
