@@ -1,0 +1,44 @@
+@model TapHoa.Data.Danhgium
+
+@{
+    ViewData["Title"] = "Evaluation Details";
+    Layout = "~/Views/Shared/_User.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th>Product</th>
+            <td>@Model.MaspNavigation.Tensp</td>
+        </tr>
+        <tr>
+            <th>Customer</th>
+            <td>@Model.MakhNavigation.Tenkh</td>
+        </tr>
+        <tr>
+            <th>Date</th>
+            <td>@Model.Ngaydanhgia.ToShortDateString()</td>
+        </tr>
+        <tr>
+            <th>Rating</th>
+            <td>@Model.Diemdanhgia</td>
+        </tr>
+        <tr>
+            <th>Comment</th>
+            <td>@Model.Loidanhgia</td>
+        </tr>
+        <tr>
+            <th>Image</th>
+            <td>
+                @if (!string.IsNullOrEmpty(Model.Hinhanh))
+                {
+                    <img src="~/Image/@Model.Hinhanh" alt="Evaluation Image" class="img-fluid" />
+                }
+            </td>
+        </tr>
+    </table>
+</div>
+
+<a href="@Url.Action("Index", "Evaluate")" class="btn btn-secondary">Back to List</a>
