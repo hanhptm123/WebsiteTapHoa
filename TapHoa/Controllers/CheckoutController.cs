@@ -28,6 +28,12 @@ namespace TapHoa.Controllers
             }
         }
 
+        private int? GetCurrentAccountId()
+        {
+            var matk = HttpContext.Session.GetInt32("NewCustomerId");
+            return matk;
+        }
+
         public IActionResult Index()
         {
             var cartItems = Carts;
@@ -53,6 +59,12 @@ namespace TapHoa.Controllers
                 return RedirectToAction("Index", "CartItem");
             }
 
+            var matk = HttpContext.Session.GetInt32("NewCustomerId");
+            if (!matk.HasValue)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             using var transaction = _context.Database.BeginTransaction();
             try
             {
@@ -65,7 +77,7 @@ namespace TapHoa.Controllers
                     Mapttt = mapttt,
                     Maptvc = maptvc,
                     Tonggia = cartItems.Sum(item => (decimal)(item.Giasaugiam * item.Soluong)),
-                    Makh = 2,
+                    Makh = matk.Value,
                     Mattddh = 1
                 };
 
@@ -83,19 +95,110 @@ namespace TapHoa.Controllers
                     };
 
                     _context.Chitietdondathangs.Add(chitiet);
+
+                    var sanpham = _context.Sanphams.FirstOrDefault(sp => sp.Masp == cartItem.Masanpham);
+                    if (sanpham != null)
+                    {
+                        if (sanpham.Soluong >= cartItem.Soluong)
+                        {
+                            sanpham.Soluong -= cartItem.Soluong;
+                        }
+                        else
+                        {
+                            throw new Exception($"Sản phẩm {sanpham.Tensp} không đủ số lượng.");
+                        }
+                    }
                 }
 
                 _context.SaveChanges();
+                HttpContext.Session.Set("Maddh", dondathang.Maddh);
+
                 transaction.Commit();
+
                 HttpContext.Session.Remove("GioHang");
 
                 return RedirectToAction("OrderSuccess");
             }
-            catch
+            catch (Exception ex)
             {
                 transaction.Rollback();
+                ModelState.AddModelError("", "Đặt hàng thất bại: " + ex.Message);
                 return RedirectToAction("Index");
             }
+        }
+
+        [HttpPost]
+        public IActionResult CancelOrder(string lydohuy)
+        {
+            var maddh = HttpContext.Session.Get<int>("Maddh");
+
+            if (maddh == 0)
+            {
+                TempData["CancelMessage"] = "Không tìm thấy mã đơn đặt hàng trong session.";
+                return RedirectToAction("OrderDetails");
+            }
+
+            using var transaction = _context.Database.BeginTransaction();
+            try
+            {
+                var dondathang = _context.Dondathangs
+                    .Include(ddh => ddh.Chitietdondathangs)
+                    .FirstOrDefault(ddh => ddh.Maddh == maddh);
+
+                if (dondathang == null || dondathang.Mattddh != 1)
+                {
+                    TempData["CancelMessage"] = "Đơn hàng không tồn tại hoặc không thể hủy.";
+                    return RedirectToAction("OrderDetails");
+                }
+
+                dondathang.Mattddh = 3;
+                dondathang.Lydohuy = lydohuy;
+                _context.Dondathangs.Update(dondathang);
+
+                foreach (var chitiet in dondathang.Chitietdondathangs)
+                {
+                    var sanpham = _context.Sanphams.FirstOrDefault(sp => sp.Masp == chitiet.Masp);
+                    if (sanpham != null)
+                    {
+                        sanpham.Soluong += chitiet.Soluong;
+                        _context.Sanphams.Update(sanpham);
+                    }
+                }
+
+                _context.SaveChanges();
+                transaction.Commit();
+
+                TempData["CancelMessage"] = "Hủy đơn hàng thành công.";
+                return RedirectToAction("OrderDetails");
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                TempData["CancelMessage"] = "Hủy đơn hàng thất bại: " + ex.Message;
+                return RedirectToAction("OrderDetails");
+            }
+        }
+
+        public IActionResult OrderDetails()
+        {
+            var maddh = HttpContext.Session.Get<int>("Maddh");
+
+            if (maddh == 0)
+            {
+                return NotFound("Không tìm thấy mã đơn đặt hàng trong session.");
+            }
+
+            var dondathang = _context.Dondathangs
+                .Include(ddh => ddh.Chitietdondathangs)
+                    .ThenInclude(ct => ct.MaspNavigation)
+                .FirstOrDefault(ddh => ddh.Maddh == maddh);
+
+            if (dondathang == null)
+            {
+                return NotFound("Đơn đặt hàng không tồn tại.");
+            }
+
+            return View(dondathang);
         }
 
         public IActionResult OrderSuccess()
