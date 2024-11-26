@@ -22,15 +22,11 @@ namespace TapHoa.Controllers
         {
             return _context.Taikhoans.Any(account => account.Matk == accountId);
         }
-        //Feature:Login
+
+        // Feature: Login
         public IActionResult Login()
         {
             return View();
-        }
-        public IActionResult Logout()
-        {
-            HttpContext.SignOutAsync();
-            return View("Login");
         }
         //[HttpPost]
         //public IActionResult Login(string Tendangnhap, string Matkhau)
@@ -64,49 +60,71 @@ namespace TapHoa.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Kiểm tra chức vụ
+            // Handle role-specific logic
             if (taikhoan.Chucvu == "Nhanvien")
             {
                 var nhanvien = _context.Nhanviens.FirstOrDefault(nv => nv.Matk == taikhoan.Matk);
                 if (nhanvien != null)
                 {
-                    // Lưu mã nhân viên vào session
                     HttpContext.Session.SetInt32("NhanvienId", nhanvien.Manv);
                 }
+                else
+                {
+                    TempData["ErrorMessage"] = "Employee account not found.";
+                    return RedirectToAction("Login");
+                }
             }
-            else
+            else if (taikhoan.Chucvu == "Khachhang")
             {
                 var khachhang = _context.Khachhangs.FirstOrDefault(kh => kh.Matk == taikhoan.Matk);
                 if (khachhang != null)
                 {
-                    // Lưu mã khách hàng vào session
                     HttpContext.Session.SetInt32("NewCustomerId", khachhang.Makh);
                 }
+                else
+                {
+                    TempData["ErrorMessage"] = "Customer account not found.";
+                    return RedirectToAction("Login");
+                }
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Invalid role.";
+                return RedirectToAction("Login");
             }
 
+            // Create authentication cookie
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, taikhoan.Tendangnhap),
                 new Claim(ClaimTypes.Role, taikhoan.Chucvu),
             };
 
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-            HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
-
-            // Điều hướng đến trang chính (home)
+            TempData["SuccessMessage"] = "Login successful!";
             return RedirectToAction("Index", "Home");
         }
 
-        //Feature:Register
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("NewCustomerId");
+            HttpContext.Session.Remove("NhanvienId");
+
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            TempData["SuccessMessage"] = "You have logged out successfully.";
+            return RedirectToAction("Login", "Accounts");
+        }
+
+        // Feature: Register
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult Register(string Tendangnhap, string Matkhau, string MatkhauConfirm, string Chucvu)
         {
@@ -134,6 +152,7 @@ namespace TapHoa.Controllers
             };
             _context.Taikhoans.Add(taikhoan);
             _context.SaveChanges();
+
             TempData["SuccessMessage"] = "Registration successful! Redirecting to login...";
             return RedirectToAction("Login");
         }
