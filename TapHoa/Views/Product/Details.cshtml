@@ -9,56 +9,45 @@
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
-                        <img class="product__details__pic__item--large"
-                             src="@Model.Hinhanh" alt="0">
+                        <img class="product__details__pic__item--large" src="@Model.Hinhanh" alt="0">
                     </div>
                     <div class="product__details__pic__slider owl-carousel">
-                        <img data-imgbigurl="@Model.Hinhanh1"
-                             src="@Model.Hinhanh1" alt="1">
-                        <img data-imgbigurl="@Model.Hinhanh2"
-                             src="@Model.Hinhanh2" alt="2">
-                        <img data-imgbigurl="@Model.Hinhanh3"
-                             src="@Model.Hinhanh3" alt="3">
+                        <img data-imgbigurl="@Model.Hinhanh1" src="@Model.Hinhanh1" alt="1">
+                        <img data-imgbigurl="@Model.Hinhanh2" src="@Model.Hinhanh2" alt="2">
+                        <img data-imgbigurl="@Model.Hinhanh3" src="@Model.Hinhanh3" alt="3">
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__text">
                     <h3>@Model.Tensp</h3>
-                   
                     <div class="product__details__price">
-                        @* Kiểm tra nếu có giảm giá *@
                         @{
                             decimal originalPrice = Model.Gia;
-                            decimal discountPercentage = (decimal)(Model.MakmNavigation?.Phantramgiam ?? 0); // Kiểm tra mã giảm giá
-                            decimal discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100)); // Tính giá sau khi giảm
+                            decimal discountPercentage = (decimal)(Model.MakmNavigation?.Phantramgiam ?? 0);
+                            decimal discountedPrice = originalPrice - (originalPrice * (discountPercentage / 100));
                         }
 
-                        @* Hiển thị giá gốc với đường gạch ngang nếu có giảm giá *@
                         @if (discountPercentage > 0)
                         {
                             <span style="text-decoration: line-through;">@(Model.Gia.ToString("C"))</span>
                         }
 
-                        @* Hiển thị giá sau giảm giá *@
                         @discountedPrice.ToString("C")
                     </div>
 
-                    <p>
-                        @Model.Mota
-                    </p>
-                    <form asp-action="AddToCart" asp-controller="CartItem" method="get">
+                    <p>@Model.Mota</p>
+                    <form id="addToCartForm" method="post" asp-action="AddToCart" asp-controller="Cart">
                         <input type="hidden" name="id" value="@Model.Masp" />
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input id="quantityInput" name="soluong" type="number" min="1" value="1" />
+                                    <input id="quantityInput" name="quantity" type="number" min="1" value="1" />
                                 </div>
                             </div>
                         </div>
-                        <button type="submit" class="primary-btn">ADD TO CART</button>
+                        <button type="button" class="primary-btn" onclick="addToCartWithQuantity(event)">ADD TO CART</button>
                     </form>
-
 
                     <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
                     <ul>
@@ -77,26 +66,6 @@
                     </ul>
                 </div>
             </div>
-            <div class="col-lg-12">
-                <div class="product__details__tab">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab"
-                               aria-selected="true">Reviews</a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane" id="tabs-2" role="tabpanel">
-                            <div class="product__details__tab__desc">
-                                <h6>Reviews</h6>
-                                <p>
-                                    @Model.Danhgia
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </section>
@@ -111,17 +80,17 @@
             </div>
         </div>
         <div class="row">
-              <div class="col-lg-3 col-md-4 col-sm-6">
+            <div class="col-lg-3 col-md-4 col-sm-6">
                 <div class="product__item">
                     <div class="product__item__pic set-bg" data-setbg="@Model.Hinhanh">
                         <ul class="product__item__pic__hover">
                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a asp-action="AddToCart" asp-controller="CartItem" asp-route-id="@Model.Masp"><i class="fa fa-shopping-cart"></i></a></li>
+                            <li><a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Masp"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
                     <div class="product__item__text">
-                        <h6><a asp-action="Details" asp-controller="Sanphams" asp-route-id="@Model">@Model.Tensp</a></h6>
+                        <h6><a asp-action="Details" asp-controller="Product" asp-route-id="@Model">@Model.Tensp</a></h6>
                         <h5>@Model.Gia.ToString("C")</h5>
                     </div>
                 </div>
@@ -129,9 +98,39 @@
         </div>
     </div>
 </section>
+
 <script>
-    function addToCartWithQuantity() {
-        var quantity = document.getElementById("quantityInput").value;
-        window.location.href = `@Url.Action("AddToCart", "CartItem")?id=@Model.Masp&soluong=${quantity}`;
+    function addToCartWithQuantity(event) {
+        event.preventDefault();
+
+        var form = document.getElementById('addToCartForm');
+        var quantity = form.querySelector('input[name="quantity"]').value;
+        var productId = form.querySelector('input[name="id"]').value;
+
+        $.ajax({
+            url: '@Url.Action("AddToCart", "Cart")',
+            type: 'POST',
+            data: {
+                id: productId,
+                quantity: quantity
+            },
+            success: function (response) {
+                if (response.success) {
+                    updateCartDisplay(response.cartData);
+                    alert("Đã thêm sản phẩm vào giỏ hàng.");
+                } else {
+                    alert(response.message); // Hiển thị lỗi từ server (nếu có)
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.");
+            }
+        });
+    }
+
+    function updateCartDisplay(cartData) {
+        $('#cartQuantity').text(cartData.totalQuantity);
+        $('#cartTotal').text(cartData.totalPrice);
     }
 </script>
+
