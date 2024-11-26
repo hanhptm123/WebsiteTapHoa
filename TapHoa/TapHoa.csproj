@@ -27,6 +27,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Checkout\Index.cshtml" />
+    <None Include="Views\Checkout\OrderSuccess.cshtml" />
     <None Include="wwwroot\LayoutAdmin\.DS_Store" />
 
   </ItemGroup>

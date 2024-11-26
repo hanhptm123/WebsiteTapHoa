@@ -1,9 +1,14 @@
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using TapHoa.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // thời gian hết hạn session
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true; // yêu cầu cho GDPR
+});
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -28,7 +33,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseAuthentication();
-
+app.UseSession();
 app.UseAuthorization();
 
 app.MapControllerRoute(
