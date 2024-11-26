@@ -10,10 +10,10 @@ namespace TapHoa.Controllers
 {
     public class EvaluateController : Controller
     {
-        private readonly TapHoaContext _context;
+        private readonly TaphoaContext _context;
         private readonly IWebHostEnvironment _hostEnvironment;
 
-        public EvaluateController(TapHoaContext context, IWebHostEnvironment hostEnvironment)
+        public EvaluateController(TaphoaContext context, IWebHostEnvironment hostEnvironment)
         {
             _context = context;
             _hostEnvironment = hostEnvironment;

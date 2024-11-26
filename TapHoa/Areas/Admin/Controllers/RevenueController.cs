@@ -8,9 +8,9 @@ namespace TapHoa.Controllers
     [Authorize(Roles = "Admin")] // Chỉ Admin mới truy cập được
     public class RevenueController : Controller
     {
-        private readonly TapHoaContext _context;
+        private readonly TaphoaContext _context;
 
-        public RevenueController(TapHoaContext context)
+        public RevenueController(TaphoaContext context)
         {
             _context = context;
         }
