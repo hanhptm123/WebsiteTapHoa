@@ -28,28 +28,13 @@ namespace TapHoa.Controllers
         {
             return View();
         }
-        //[HttpPost]
-        //public IActionResult Login(string Tendangnhap, string Matkhau)
-        //{
-        //    var taikhoan = _context.Taikhoans.Where(t => t.Tendangnhap == Tendangnhap && t.Matkhau == Matkhau).FirstOrDefault<Taikhoan>();
-        //    if (taikhoan == null)
-        //    {
-        //        TempData["ErrorMessage"] = "Invalid username or password.";
-        //        return RedirectToAction("Login");
-        //    }
-        //    TempData["SuccessMessage"] = "Login successful! Redirecting...";
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Name, taikhoan.Tendangnhap),
-        //        new Claim(ClaimTypes.Role, taikhoan.Chucvu),
-        //    };
-        //    var claimsIdentity = new ClaimsIdentity(
-        //    claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        //    HttpContext.SignInAsync(
-        //    CookieAuthenticationDefaults.AuthenticationScheme,
-        //    new ClaimsPrincipal(claimsIdentity));
-        //    return RedirectToAction("Login");
-        //}
+
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync();
+            return View("Login");
+        }
+
         [HttpPost]
         public IActionResult Login(string Tendangnhap, string Matkhau)
         {

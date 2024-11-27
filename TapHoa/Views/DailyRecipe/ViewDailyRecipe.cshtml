@@ -1,0 +1,71 @@
+﻿@model IEnumerable<TapHoa.Data.Congthuc>
+@{
+    ViewData["Title"] = "ViewDailyRecipe";
+    Layout = "~/Views/Shared/_User.cshtml";
+}
+
+<!-- Thêm Bootstrap CSS nếu chưa có -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+<h1 class="mb-4 text-center">What are you eating today?</h1>
+
+
+<div class="container">
+    <div class="row">
+        @foreach (var recipe in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <!-- Chia 3 cột cho mỗi công thức -->
+                <div class="card">
+                    <div class="card-body text-center">
+                        <div class="recipe-image mb-3">
+                            @if (!string.IsNullOrEmpty(recipe.Video))
+                            {
+                                var videoId = GetVideoIdFromUrl(recipe.Video);
+                                @if (!string.IsNullOrEmpty(videoId))
+                                {
+                                    <iframe width="100%" height="auto" src="https://www.youtube.com/embed/@videoId" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                }
+                                else
+                                {
+                                    <p>Invalid YouTube video URL.</p>
+                                }
+                            }
+                        </div>
+                        <div class="recipe-info">
+                            <h2><a href="@Url.Action("DetailsCustomer", "DailyRecipe", new { id = recipe.Mact })" class="text-primary">@recipe.Ten</a></h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Thêm Bootstrap JS nếu chưa có -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+@functions {
+    // Function to extract video ID from a YouTube URL
+    private string GetVideoIdFromUrl(string url)
+    {
+        if (url.Contains("youtube.com") || url.Contains("youtu.be"))
+        {
+            var videoId = string.Empty;
+            if (url.Contains("youtu.be"))
+            {
+                videoId = url.Split('/').Last();
+            }
+            else if (url.Contains("youtube.com"))
+            {
+                var queryString = new Uri(url).Query;
+                var queryParams = System.Web.HttpUtility.ParseQueryString(queryString);
+                videoId = queryParams["v"];
+            }
+            return videoId;
+        }
+        return string.Empty;
+    }
+}

@@ -1,0 +1,114 @@
+﻿@model IEnumerable<TapHoa.Data.Congthuc>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!-- Thêm Bootstrap CSS nếu chưa có -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Tạo kiểu CSS tùy chỉnh -->
+<style>
+    .table-container {
+        margin-top: 30px;
+    }
+
+    .table th, .table td {
+        text-align: center;
+    }
+
+    .table th {
+        background-color: #f8f9fa;
+        color: #495057;
+    }
+
+    .table td {
+        vertical-align: middle;
+    }
+
+    .table-actions a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .table-actions a:hover {
+            color: #0056b3;
+        }
+
+        .table-actions a:focus {
+            outline: none;
+            box-shadow: none;
+        }
+
+    .btn-create {
+        background-color: #28a745;
+        color: white;
+        font-weight: bold;
+        padding: 10px 15px;
+        border-radius: 5px;
+        text-decoration: none;
+        margin-bottom: 20px;
+    }
+
+        .btn-create:hover {
+            background-color: #218838;
+            color: white;
+        }
+</style>
+
+<h1 class="text-center my-4">List of Daily Recipe</h1>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn-create">Create New</a>
+</p>
+
+<div class="table-container">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>
+                    Name of Recipe
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Video)
+                </th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ten)
+                    </td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.Video))
+                        {
+                            string youtubeEmbedLink = item.Video.Replace("https://youtu.be/", "https://www.youtube.com/embed/");
+                            <div class="ratio ratio-16x9">
+                                <iframe src="@youtubeEmbedLink" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                            </div>
+                        }
+                        else
+                        {
+                            <span class="text-muted">No video available</span>
+                        }
+                    </td>
+                    <td class="table-actions">
+                        <a asp-action="Edit" asp-route-id="@item.Mact">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Mact">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Mact">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Thêm Bootstrap JS nếu chưa có -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>

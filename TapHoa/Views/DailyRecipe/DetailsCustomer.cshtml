@@ -1,0 +1,91 @@
+﻿@model TapHoa.Data.Congthuc
+@{
+    ViewData["Title"] = "ViewDailyRecipe";
+    Layout = "~/Views/Shared/_User.cshtml";
+}
+
+<!-- Thêm Bootstrap CSS nếu chưa có -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+<style>
+    .container {
+        margin-top: 30px;
+    }
+
+    .title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .video-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    iframe {
+        max-width: 100%;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .no-video {
+        color: #888;
+        font-style: italic;
+        text-align: center;
+        margin-top: 20px;
+    }
+</style>
+
+<h1 class="title"> @Html.DisplayFor(model => model.Ten)</h1>
+
+<div class="container">
+    <dl class="row">
+        <dd class="col-sm-12">
+            @if (!string.IsNullOrEmpty(Model.Video))
+            {
+                string youtubeEmbedLink = Model.Video.Replace("https://youtu.be/", "https://www.youtube.com/embed/");
+                <div class="video-container">
+                    <iframe width="640" height="360" src="@youtubeEmbedLink" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            }
+            else
+            {
+                <div class="no-video">No video available</div>
+            }
+        </dd>
+    </dl>
+    <div class="related-products mt-4">
+        @await Component.InvokeAsync("ProductRecipe", new { recipeId = Model.Mact })
+    </div>
+</div>
+
+
+<!-- Thêm Bootstrap JS nếu chưa có -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+@functions {
+    // Function to extract video ID from a YouTube URL
+    private string GetVideoIdFromUrl(string url)
+    {
+        if (url.Contains("youtube.com") || url.Contains("youtu.be"))
+        {
+            var videoId = string.Empty;
+            if (url.Contains("youtu.be"))
+            {
+                videoId = url.Split('/').Last();
+            }
+            else if (url.Contains("youtube.com"))
+            {
+                var queryString = new Uri(url).Query;
+                var queryParams = System.Web.HttpUtility.ParseQueryString(queryString);
+                videoId = queryParams["v"];
+            }
+            return videoId;
+        }
+        return string.Empty;
+    }
+}
