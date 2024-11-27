@@ -5,6 +5,7 @@ using X.PagedList.Extensions;
 
 namespace TapHoa.Areas.Admin.Controllers
 {
+
     [Area("admin")]
     [Route("admin")]
     [Route("admin/blog")]
