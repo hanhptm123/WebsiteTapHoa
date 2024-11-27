@@ -1,0 +1,41 @@
+﻿@model List<TapHoa.Models.LikeItem>
+
+@{
+    ViewData["Title"] = "Like list";
+}
+
+<h3>Like list</h3>
+
+@if (!Model.Any())
+{
+    <p>Your wishlist is empty.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Image</th>
+                <th>Product name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        <img src="@item.Hinhanh" alt="@item.Tensanpham" style="width: 100px;" />
+                    </td>
+                    <td>@item.Tensanpham</td>
+                    <td>
+                        <form asp-action="RemoveFromLike" asp-controller="Like" method="post">
+                            <input type="hidden" name="id" value="@item.Masanpham" />
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
