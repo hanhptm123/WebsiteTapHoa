@@ -24,7 +24,11 @@
                                     <div class="product__item__pic set-bg">
                                         <img src="@item.Hinhanh" alt="Product Image" class="img-fluid">
                                         <ul class="product__item__pic__hover">
-                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
+                                            <li>
+                                                <a href="javascript:void(0);" class="add-to-like" data-id="@item.Masp">
+                                                    <i class="fa fa-heart-o"></i>
+                                                </a>
+                                            </li>
                                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
                                             <li>
                                                 <!-- Thay đổi thành liên kết để thêm vào giỏ hàng -->
@@ -94,6 +98,32 @@
                     }
                 });
             });
+
+            // Add to Like Button Click
+            $(".add-to-like").click(function () {
+                var productId = $(this).data("id");
+
+                $.ajax({
+                    url: '@Url.Action("AddToLike", "Like")', 
+                    type: 'POST',
+                    data: { id: productId },
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            // window.location.href = '/Like/Index'; 
+                        } else {
+                            alert(response.message); 
+                        }
+                    },
+                    error: function () {
+                        alert("There was an error adding the product to the like list.");
+                    }
+                });
+            });
         });
     </script>
 }
+
+
+
+

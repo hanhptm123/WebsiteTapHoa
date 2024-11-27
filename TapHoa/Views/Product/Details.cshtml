@@ -49,7 +49,14 @@
                         <button type="button" class="primary-btn" onclick="addToCartWithQuantity(event)">ADD TO CART</button>
                     </form>
 
-                    <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                    <!-- Form for Add to Like -->
+                    <form id="addToLikeForm" method="post" asp-action="AddToLike" asp-controller="Like">
+                        <input type="hidden" name="id" value="@Model.Masp" />
+                        <!-- Thay thế button bằng icon trái tim -->
+                        <a href="javascript:void(0);" class="heart-icon" onclick="addToLike(event)">
+                            <span class="icon_heart_alt"></span> <!-- Biểu tượng trái tim -->
+                        </a>
+                    </form>
                     <ul>
                         <li><b>Availability</b> <span>In Stock</span></li>
                         <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
@@ -132,5 +139,26 @@
         $('#cartQuantity').text(cartData.totalQuantity);
         $('#cartTotal').text(cartData.totalPrice);
     }
-</script>
 
+    function addToLike(event) {
+        event.preventDefault();
+
+        var productId = $("input[name='id']").val();
+
+        $.ajax({
+            url: '@Url.Action("AddToLike", "Like")',
+            type: 'POST',
+            data: { id: productId },
+            success: function (response) {
+                if (response.success) {
+                    alert(response.message);
+                    $(".heart-icon").css("color", "red"); 
+                    alert(response.message);
+                }
+            },
+            error: function () {
+                alert("Có lỗi khi thêm sản phẩm vào danh sách yêu thích.");
+            }
+        });
+    }
+</script>
