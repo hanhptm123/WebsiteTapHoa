@@ -21,6 +21,8 @@ public partial class TaphoaContext : DbContext
 
     public virtual DbSet<Chitiethoadon> Chitiethoadons { get; set; }
 
+    public virtual DbSet<Congthuc> Congthucs { get; set; }
+
     public virtual DbSet<Ctphieunhap> Ctphieunhaps { get; set; }
 
     public virtual DbSet<Danhgium> Danhgia { get; set; }
@@ -55,6 +57,7 @@ public partial class TaphoaContext : DbContext
 
     public virtual DbSet<Trangthaidondathang> Trangthaidondathangs { get; set; }
 
+   
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Baiviet>(entity =>
@@ -123,6 +126,36 @@ public partial class TaphoaContext : DbContext
                 .HasForeignKey(d => d.Masp)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_CHITIETHOADON_SANPHAM");
+        });
+
+        modelBuilder.Entity<Congthuc>(entity =>
+        {
+            entity.HasKey(e => e.Mact).HasName("PK__CONGTHUC__603F183A728F5152");
+
+            entity.ToTable("CONGTHUC");
+
+            entity.Property(e => e.Mact).HasColumnName("MACT");
+            entity.Property(e => e.Ten).HasColumnName("TEN");
+            entity.Property(e => e.Video).HasColumnName("VIDEO");
+
+            entity.HasMany(d => d.Masps).WithMany(p => p.Macts)
+                .UsingEntity<Dictionary<string, object>>(
+                    "Ctcongthuc",
+                    r => r.HasOne<Sanpham>().WithMany()
+                        .HasForeignKey("Masp")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_CTCONGTHUC_SANPHAM"),
+                    l => l.HasOne<Congthuc>().WithMany()
+                        .HasForeignKey("Mact")
+                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .HasConstraintName("FK_CTCONGTHUC_CONGTHUC"),
+                    j =>
+                    {
+                        j.HasKey("Mact", "Masp");
+                        j.ToTable("CTCONGTHUC");
+                        j.IndexerProperty<int>("Mact").HasColumnName("MACT");
+                        j.IndexerProperty<int>("Masp").HasColumnName("MASP");
+                    });
         });
 
         modelBuilder.Entity<Ctphieunhap>(entity =>

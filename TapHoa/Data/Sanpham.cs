@@ -46,4 +46,6 @@ public partial class Sanpham
     public virtual Nhacungcap? ManccNavigation { get; set; }
 
     public virtual Thuonghieu? MathNavigation { get; set; }
+
+    public virtual ICollection<Congthuc> Macts { get; set; } = new List<Congthuc>();
 }

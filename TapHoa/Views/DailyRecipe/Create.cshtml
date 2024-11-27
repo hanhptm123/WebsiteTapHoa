@@ -1,0 +1,91 @@
+﻿@model TapHoa.Data.Congthuc
+@using Microsoft.AspNetCore.Mvc.Rendering
+
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1>Create Daily Recipe</h1>
+
+<div class="alert alert-info">
+    <p>Enter the recipe details below and add the necessary products for the recipe.</p>
+</div>
+
+@{
+    var products = ViewBag.Products as List<TapHoa.Data.Sanpham>;
+}
+
+@if (products == null || !products.Any())
+{
+    <div class="alert alert-danger">No products available. Please add products before creating a recipe.</div>
+}
+else
+{
+    <form asp-action="Create" method="post">
+        <div class="form-group">
+            <label for="Name">Recipe Name</label>
+            <input id="Name" name="Name" type="text" class="form-control" placeholder="Enter recipe name" />
+        </div>
+        <div class="form-group">
+            <label for="VideoUrl">Video URL</label>
+            <input id="VideoUrl" name="VideoUrl" type="text" class="form-control" placeholder="Paste the video URL" />
+        </div>
+
+        <h4>Recipe Products</h4>
+        <hr />
+        <div id="productListContainer">
+            <div class="product-row">
+                <div class="form-group">
+                    <label for="Product">Product</label>
+                    <select name="SelectedProducts[0]" class="form-control">
+                        <option value="">Select a product</option>
+                        @foreach (var product in products)
+                        {
+                            <option value="@product.Masp">@product.Tensp</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" id="addProductButton" class="btn btn-secondary">Add Product</button>
+        <button type="submit" class="btn btn-primary">Save Recipe</button>
+    </form>
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <script>
+        const products = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.Products));
+        let productIndex = 1;
+
+        document.getElementById('addProductButton').addEventListener('click', function () {
+            const container = document.getElementById('productListContainer');
+            const newProductRow = document.createElement('div');
+            newProductRow.classList.add('product-row');
+
+            let productOptions = '<option value="">Select a product</option>';
+            products.forEach(product => {
+                productOptions += `<option value="${product.Masp}">${product.Tensp}</option>`;
+            });
+
+            newProductRow.innerHTML = `
+                <div class="form-group">
+                    <label for="Product">Product</label>
+                    <select name="SelectedProducts[${productIndex}]" class="form-control">
+                        ${productOptions}
+                    </select>
+                </div>
+            `;
+            container.appendChild(newProductRow);
+            productIndex++;
+        });
+    </script>
+}
+
+

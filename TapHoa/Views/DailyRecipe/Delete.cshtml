@@ -1,0 +1,53 @@
+﻿@model TapHoa.Data.Congthuc
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container py-4">
+    <h1 class="text-center text-danger mb-4">Delete Recipe</h1>
+
+    <h3 class="text-center mb-4">Are you sure you want to delete this?</h3>
+
+    <div class="card shadow-sm p-4">
+        <h4 class="text-primary mb-3">Recipe Details</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3 fw-bold text-secondary">
+                Name of Recipe
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Ten)
+            </dd>
+            <dt class="col-sm-3 fw-bold text-secondary">
+                @Html.DisplayNameFor(model => model.Video)
+            </dt>
+            <dd class="col-sm-9">
+                @if (!string.IsNullOrEmpty(Model.Video))
+                {
+                    string youtubeEmbedLink = Model.Video.Replace("https://youtu.be/", "https://www.youtube.com/embed/");
+                    <div class="ratio ratio-16x9">
+                        <iframe src="@youtubeEmbedLink" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    </div>
+                }
+                else
+                {
+                    <span class="text-muted">No video available</span>
+                }
+            </dd>
+        </dl>
+    </div>
+
+    <div class="mt-4 text-center">
+        <form asp-action="Delete" class="d-inline">
+            <input type="hidden" asp-for="Mact" />
+            <button type="submit" class="btn btn-danger me-2">
+                <i class="bi bi-trash"></i> Delete
+            </button>
+        </form>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>

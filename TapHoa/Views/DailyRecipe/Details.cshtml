@@ -1,0 +1,42 @@
+﻿@model TapHoa.Data.Congthuc
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h1 class="text-center mb-4">Recipe Details</h1>
+
+<div class="card shadow-sm p-4">
+    <h4 class="text-primary mb-3">Recipe Information</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-3 fw-bold text-secondary">
+            Name of Recipe
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.Ten)
+        </dd>
+        <dt class="col-sm-3 fw-bold text-secondary">
+            @Html.DisplayNameFor(model => model.Video)
+        </dt>
+        <dd class="col-sm-9">
+            @if (!string.IsNullOrEmpty(Model.Video))
+            {
+                string youtubeEmbedLink = Model.Video.Replace("https://youtu.be/", "https://www.youtube.com/embed/");
+                <div class="ratio ratio-16x9">
+                    <iframe src="@youtubeEmbedLink" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                </div>
+            }
+            else
+            {
+                <span class="text-muted">No video available</span>
+            }
+        </dd>
+    </dl>
+</div>
+
+<div class="mt-4 text-center">
+    <a asp-action="Edit" asp-route-id="@Model?.Mact" class="btn btn-primary me-2">Edit</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
