@@ -71,5 +71,16 @@ namespace TapHoa.Controllers
 
             return View(sanpham);
         }
+        [HttpGet]
+        public IActionResult Search(string keyword)
+        {
+            var products = string.IsNullOrEmpty(keyword)
+                ? new List<Sanpham>() 
+                : _context.Sanphams
+                          .Where(sp => sp.Tensp.Contains(keyword))
+                          .ToList();
+            return PartialView("ProductList", products);
+        }
+
     }
 }

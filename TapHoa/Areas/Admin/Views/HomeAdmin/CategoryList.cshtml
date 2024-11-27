@@ -10,7 +10,15 @@
 }
 
 <h3>Product category list</h3>
+<form method="get" action="/admin/homeadmin/SearchCategory">
+    <div class="form-group">
+        <input type="text" name="keyword" class="form-control"
+               placeholder="Enter category name to search..." value="@ViewBag.Keyword" />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
 
+<br />
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger">

@@ -89,5 +89,22 @@ namespace TapHoa.Areas.Admin.Controllers
 
             return RedirectToAction("BrandList");
         }
+        [Route("SearchBrand")]
+        public IActionResult SearchBrand(string keyword, int? page)
+        {
+            int pageSize = 8; 
+            int pageNumber = page == null || page < 1 ? 1 : page.Value;
+
+            // Lọc thương hiệu theo tên
+            var brands = _context.Thuonghieus
+                .AsNoTracking()
+                .Where(b => string.IsNullOrEmpty(keyword) || b.Tenthuonghieu.Contains(keyword)) 
+                .OrderBy(b => b.Tenthuonghieu)
+                .ToPagedList(pageNumber, pageSize);
+
+            ViewBag.Keyword = keyword; 
+            return View("BrandList", brands); 
+        }
+
     }
 }
