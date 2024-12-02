@@ -82,7 +82,7 @@
                         <div class="header__top__right__auth">
                             @if (User.Identity.IsAuthenticated)
                             {
-                                <a href="/address/addressList"><i class="fa fa-user"></i> Address</a>
+                                <a href="/address/addressList"><i class="fa fa-user"></i>Your Address</a>
                             }
                         </div>
                         <div class="header__top__right__auth">
@@ -94,7 +94,7 @@
                         <div class="header__top__right__auth">
                             @if (User.Identity.IsAuthenticated && !Context.Request.Path.Value.Contains("/Accounts/Login"))
                             {
-                                <a href="/Accounts/Logout"><i class="fa fa-user"></i> Logout</a>
+                                <a href="/Accounts/Logout"><i class="fa fa-user"></i>Logout</a>
                             }
                         </div>
                     </div>
