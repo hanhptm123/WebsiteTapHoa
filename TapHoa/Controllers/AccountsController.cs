@@ -92,16 +92,7 @@ namespace TapHoa.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Remove("NewCustomerId");
-            HttpContext.Session.Remove("NhanvienId");
-
-            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
-            TempData["SuccessMessage"] = "You have logged out successfully.";
-            return RedirectToAction("Login", "Accounts");
-        }
+        
 
         // Feature: Register
         [HttpGet]
