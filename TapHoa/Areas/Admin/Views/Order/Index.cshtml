@@ -5,7 +5,19 @@
 }
 @addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers
 <h2 class="title">Order List</h2>
+<!-- Ô tìm kiếm -->
+<form asp-action="SearchByCustomerName" method="get">
+    <div class="form-group">
+        <input type="text" name="customerName" class="form-control" placeholder="Enter customer name" value="@ViewBag.CustomerName" />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">No orders found for the given customer name.</div>
+}
 
+<br />
 <table class="table table-hover">
     <thead class="thead-dark">
         <tr>

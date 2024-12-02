@@ -93,5 +93,29 @@ namespace TapHoa.Areas.Admin.Controllers
         {
             return _context.Dondathangs.Any(e => e.Maddh == id);
         }
+        [Route("SearchByCustomerName")]
+        public async Task<IActionResult> SearchByCustomerName(string customerName)
+        {
+            if (string.IsNullOrEmpty(customerName))
+            {
+                // Nếu không nhập tên khách hàng, trả về danh sách tất cả đơn đặt hàng
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Tìm kiếm đơn đặt hàng theo tên khách hàng (Tenkh)
+            var orders = await _context.Dondathangs
+                .Include(d => d.Chitietdondathangs)
+                .Include(d => d.MakhNavigation)
+                .Include(d => d.MaptvcNavigation)
+                .Include(d => d.MattddhNavigation)
+                .Where(o => EF.Functions.Like(o.MakhNavigation.Tenkh, $"%{customerName}%")) // So sánh tên khách hàng
+                .ToListAsync();
+
+            // Lưu lại tên khách hàng đã tìm kiếm để hiển thị lại trên giao diện
+            ViewBag.CustomerName = customerName;
+
+            return View("Index", orders);
+        }
+
     }
 }

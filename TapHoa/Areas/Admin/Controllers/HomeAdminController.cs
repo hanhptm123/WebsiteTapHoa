@@ -32,6 +32,7 @@ namespace TapHoa.Areas.Admin.Controllers
             var lstsanpham = _context.Sanphams.AsNoTracking().OrderBy(x => x.Tensp).ToPagedList(pageNumber, pageSize);
             return View(lstsanpham);
         }
+
         [Route("CreateProduct")]
         [HttpGet]
         public IActionResult CreateProduct()
@@ -112,6 +113,23 @@ namespace TapHoa.Areas.Admin.Controllers
             var lstloaisanpham = _context.Loaisps.AsNoTracking().OrderBy(x => x.Tenloaisp).ToPagedList(pageNumber, pageSize);
             return View(lstloaisanpham);
         }
+        [HttpGet]
+        [Route("SearchProduct")]
+        public IActionResult SearchProduct(string keyword, int? page)
+        {
+            int pageSize = 8; 
+            int pageNumber = page == null || page < 1 ? 1 : page.Value;
+
+            var products = _context.Sanphams
+                .AsNoTracking()
+                .Where(sp => string.IsNullOrEmpty(keyword) || sp.Tensp.Contains(keyword))
+                .OrderBy(sp => sp.Tensp)
+                .ToPagedList(pageNumber, pageSize);
+
+            ViewBag.Keyword = keyword; 
+            return View("ProductList", products); 
+        }
+
         [Route("CreateCategory")]
         [HttpGet]
         public IActionResult CreateCategory()
@@ -198,6 +216,23 @@ namespace TapHoa.Areas.Admin.Controllers
 
             return RedirectToAction("CategoryList", "HomeAdmin");
         }
+        [HttpGet]
+        [Route("SearchCategory")]
+        public IActionResult SearchCategory(string keyword, int? page)
+        {
+            int pageSize = 8; 
+            int pageNumber = page == null || page < 1 ? 1 : page.Value;
+
+            var categories = _context.Loaisps
+                .AsNoTracking()
+                .Where(c => string.IsNullOrEmpty(keyword) || c.Tenloaisp.Contains(keyword)) 
+                .OrderBy(c => c.Tenloaisp)
+                .ToPagedList(pageNumber, pageSize);
+
+            ViewBag.Keyword = keyword;
+            return View("CategoryList", categories);
+        }
+
 
 
     }
