@@ -12,17 +12,12 @@ namespace TapHoa.Controllers
         {
             _context = context;
         }
-
         const string CART_KEY = "MYCART";
-
-        // Lấy mã tài khoản hiện tại từ session
         private int? GetCurrentAccountId()
         {
             var matk = HttpContext.Session.GetInt32("NewCustomerId");
              return matk;
         }
-
-
         public List<CartItem> Cart
         {
             get
@@ -32,8 +27,6 @@ namespace TapHoa.Controllers
                 {
                     return new List<CartItem>();
                 }
-
-                // Lấy giỏ hàng từ session theo mã khách hàng
                 var cart = HttpContext.Session.Get<List<CartItem>>($"{CART_KEY}_{makh}") ?? new List<CartItem>();
                 return cart;
             }
@@ -46,18 +39,14 @@ namespace TapHoa.Controllers
                 }
             }
         }
-
         private void SaveCart(List<CartItem> cart)
         {
             var makh = GetCurrentAccountId();
             if (makh != null)
             {
-                // Lưu giỏ hàng vào session với key theo mã khách hàng
                 HttpContext.Session.Set($"{CART_KEY}_{makh}", cart);
             }
         }
-
-
         public IActionResult Index()
         {
             var matk = GetCurrentAccountId();
@@ -130,7 +119,6 @@ namespace TapHoa.Controllers
                 }
             });
         }
-
         public IActionResult RemoveFromCart(int id)
         {
             var makh = GetCurrentAccountId();
@@ -139,21 +127,19 @@ namespace TapHoa.Controllers
                 TempData["ErrorMessage"] = "Vui lòng đăng nhập để quản lý giỏ hàng.";
                 return RedirectToAction("Login", "Accounts");
             }
-
             var cart = Cart;
             var item = cart.SingleOrDefault(p => p.Masanpham == id);
 
             if (item != null)
             {
                 cart.Remove(item);
-                SaveCart(cart); // Save the updated cart
+                SaveCart(cart); 
                 TempData["SuccessMessage"] = "Đã xoá sản phẩm khỏi giỏ hàng.";
             }
             else
             {
                 TempData["ErrorMessage"] = "Không tìm thấy sản phẩm trong giỏ hàng.";
             }
-
             return RedirectToAction("Index");
         }
 

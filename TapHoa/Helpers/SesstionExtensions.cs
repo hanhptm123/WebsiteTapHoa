@@ -8,7 +8,6 @@ namespace TapHoa.Helpers
         {
             session.SetString(key, JsonSerializer.Serialize(value));
         }
-
         public static T? Get<T>(this ISession session, string key)
         {
             var value = session.GetString(key);

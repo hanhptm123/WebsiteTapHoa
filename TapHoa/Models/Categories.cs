@@ -6,7 +6,6 @@ namespace TapHoa.Models
     public class Categories : ViewComponent
     {
         private readonly TaphoaContext _context;
-
         public Categories(TaphoaContext context)
         {
             _context = context;

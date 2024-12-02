@@ -232,8 +232,5 @@ namespace TapHoa.Areas.Admin.Controllers
             ViewBag.Keyword = keyword;
             return View("CategoryList", categories);
         }
-
-
-
     }
 }

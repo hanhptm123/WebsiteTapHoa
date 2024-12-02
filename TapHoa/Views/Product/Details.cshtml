@@ -35,7 +35,6 @@
 
                         @discountedPrice.ToString("C")
                     </div>
-
                     <p>@Model.Mota</p>
                     <form id="addToCartForm" method="post" asp-action="AddToCart" asp-controller="Cart">
                         <input type="hidden" name="id" value="@Model.Masp" />
@@ -48,13 +47,10 @@
                         </div>
                         <button type="button" class="primary-btn" onclick="addToCartWithQuantity(event)">ADD TO CART</button>
                     </form>
-
-                    <!-- Form for Add to Like -->
                     <form id="addToLikeForm" method="post" asp-action="AddToLike" asp-controller="Like">
                         <input type="hidden" name="id" value="@Model.Masp" />
-                        <!-- Thay thế button bằng icon trái tim -->
                         <a href="javascript:void(0);" class="heart-icon" onclick="addToLike(event)">
-                            <span class="icon_heart_alt"></span> <!-- Biểu tượng trái tim -->
+                            <span class="icon_heart_alt"></span>
                         </a>
                     </form>
                     <ul>
@@ -109,11 +105,9 @@
 <script>
     function addToCartWithQuantity(event) {
         event.preventDefault();
-
         var form = document.getElementById('addToCartForm');
         var quantity = form.querySelector('input[name="quantity"]').value;
         var productId = form.querySelector('input[name="id"]').value;
-
         $.ajax({
             url: '@Url.Action("AddToCart", "Cart")',
             type: 'POST',
@@ -126,7 +120,7 @@
                     updateCartDisplay(response.cartData);
                     alert("Đã thêm sản phẩm vào giỏ hàng.");
                 } else {
-                    alert(response.message); // Hiển thị lỗi từ server (nếu có)
+                    alert(response.message); 
                 }
             },
             error: function (xhr, status, error) {
@@ -134,17 +128,13 @@
             }
         });
     }
-
     function updateCartDisplay(cartData) {
         $('#cartQuantity').text(cartData.totalQuantity);
         $('#cartTotal').text(cartData.totalPrice);
     }
-
     function addToLike(event) {
         event.preventDefault();
-
         var productId = $("input[name='id']").val();
-
         $.ajax({
             url: '@Url.Action("AddToLike", "Like")',
             type: 'POST',

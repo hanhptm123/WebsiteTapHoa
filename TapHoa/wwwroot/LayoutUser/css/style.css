@@ -1796,6 +1796,11 @@ ol {
 	cursor: pointer;
 	display: inline-block;
 }
+	.pro-qty .qtybtn::before,
+	.pro-qty .qtybtn::after {
+		content: '';
+	}
+
 
 .product__details__tab {
 	padding-top: 85px;
