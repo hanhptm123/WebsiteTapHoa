@@ -1,0 +1,51 @@
+﻿@{
+    var order = ViewBag.Order as TapHoa.Data.Dondathang;
+    var orderDetails = ViewBag.OrderDetails as IEnumerable<TapHoa.Data.Chitietdondathang>;
+}
+
+<h2>Chi tiết đơn hàng</h2>
+
+@if (order == null)
+{
+    <p>Không tìm thấy thông tin đơn hàng.</p>
+}
+else
+{
+    <div>
+        <p><strong>Mã đơn hàng:</strong> @order.Maddh</p>
+        <p><strong>Ngày đặt:</strong> @order.Ngaydat.ToString("dd/MM/yyyy")</p>
+        <p><strong>Tổng giá:</strong> @order.Tonggia</p>
+        <p><strong>Trạng thái:</strong> @order.MattddhNavigation?.Tenttddh</p>
+    </div>
+
+    <h3>Sản phẩm trong đơn hàng</h3>
+    @if (orderDetails == null || !orderDetails.Any())
+    {
+        <p>Không có sản phẩm nào trong đơn hàng này.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detail in orderDetails)
+                {
+                    <tr>
+                        <td>@detail.MaspNavigation?.Tensp</td>
+                        <td>@detail.Soluong</td>
+                        <td>@detail.MaspNavigation?.Gia.ToString("C")</td>
+                        <td>@(detail.Soluong * (detail.MaspNavigation?.Gia ?? 0)).ToString("C")</td>
+                    </tr>
+
+                }
+            </tbody>
+        </table>
+    }
+}
