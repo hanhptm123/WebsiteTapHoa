@@ -68,6 +68,12 @@
     </div>
 </section>
 
+<style>
+    .liked {
+        color: red;
+    }
+</style>
+
 @section Scripts {
     <script>
         $(document).ready(function () {
@@ -99,24 +105,24 @@
                 });
             });
 
-            // Add to Like Button Click
             $(".add-to-like").click(function () {
                 var productId = $(this).data("id");
+                var $heartIcon = $(this).find("i");  
 
                 $.ajax({
-                    url: '@Url.Action("AddToLike", "Like")', 
+                    url: '@Url.Action("AddToLike", "Like")',
                     type: 'POST',
                     data: { id: productId },
                     success: function (response) {
                         if (response.success) {
+                            $heartIcon.toggleClass("liked");
                             alert(response.message);
-                            // window.location.href = '/Like/Index'; 
                         } else {
-                            alert(response.message); 
+                            alert(response.message);
                         }
                     },
                     error: function () {
-                        alert("There was an error adding the product to the like list.");
+                        alert("Có lỗi khi thêm sản phẩm vào danh sách yêu thích.");
                     }
                 });
             });

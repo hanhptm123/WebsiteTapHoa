@@ -9,12 +9,12 @@
             <div class="col-lg-6 col-md-6">
                 <div class="product__details__pic">
                     <div class="product__details__pic__item">
-                        <img class="product__details__pic__item--large" src="@Model.Hinhanh" alt="0">
+                        <img class="product__details__pic__item--large" src="@Model.Hinhanh" alt="Product Image">
                     </div>
                     <div class="product__details__pic__slider owl-carousel">
-                        <img data-imgbigurl="@Model.Hinhanh1" src="@Model.Hinhanh1" alt="1">
-                        <img data-imgbigurl="@Model.Hinhanh2" src="@Model.Hinhanh2" alt="2">
-                        <img data-imgbigurl="@Model.Hinhanh3" src="@Model.Hinhanh3" alt="3">
+                        <img data-imgbigurl="@Model.Hinhanh1" src="@Model.Hinhanh1" alt="Product Image 1">
+                        <img data-imgbigurl="@Model.Hinhanh2" src="@Model.Hinhanh2" alt="Product Image 2">
+                        <img data-imgbigurl="@Model.Hinhanh3" src="@Model.Hinhanh3" alt="Product Image 3">
                     </div>
                 </div>
             </div>
@@ -35,9 +35,10 @@
 
                         @discountedPrice.ToString("C")
                     </div>
-
                     <p>@Model.Mota</p>
-                    <form id="addToCartForm" method="post" asp-action="AddToCart" asp-controller="Cart">
+
+                    <!-- Form for Add to Cart -->
+                    <form id="addToCartForm" method="post">
                         <input type="hidden" name="id" value="@Model.Masp" />
                         <div class="product__details__quantity">
                             <div class="quantity">
@@ -46,17 +47,17 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" class="primary-btn" onclick="addToCartWithQuantity(event)">ADD TO CART</button>
+                        <button type="button" class="primary-btn" onclick="addToCart(event)">ADD TO CART</button>
                     </form>
 
                     <!-- Form for Add to Like -->
-                    <form id="addToLikeForm" method="post" asp-action="AddToLike" asp-controller="Like">
+                    <form id="addToLikeForm" method="post">
                         <input type="hidden" name="id" value="@Model.Masp" />
-                        <!-- Thay thế button bằng icon trái tim -->
                         <a href="javascript:void(0);" class="heart-icon" onclick="addToLike(event)">
-                            <span class="icon_heart_alt"></span> <!-- Biểu tượng trái tim -->
+                            <span class="icon_heart_alt"></span>
                         </a>
                     </form>
+
                     <ul>
                         <li><b>Availability</b> <span>In Stock</span></li>
                         <li><b>Shipping</b> <span>01 day shipping. <samp>Free pickup today</samp></span></li>
@@ -82,7 +83,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="section-title related__product__title">
-                    <h2>Related Product</h2>
+                    <h2>Related Products</h2>
                 </div>
             </div>
         </div>
@@ -93,11 +94,11 @@
                         <ul class="product__item__pic__hover">
                             <li><a href="#"><i class="fa fa-heart"></i></a></li>
                             <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                            <li><a asp-action="AddToCart" asp-controller="Cart" asp-route-id="@Model.Masp"><i class="fa fa-shopping-cart"></i></a></li>
+                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
                         </ul>
                     </div>
                     <div class="product__item__text">
-                        <h6><a asp-action="Details" asp-controller="Product" asp-route-id="@Model">@Model.Tensp</a></h6>
+                        <h6><a asp-action="Details" asp-controller="Product" asp-route-id="@Model.Masp">@Model.Tensp</a></h6>
                         <h5>@Model.Gia.ToString("C")</h5>
                     </div>
                 </div>
@@ -107,7 +108,8 @@
 </section>
 
 <script>
-    function addToCartWithQuantity(event) {
+    // Add to Cart functionality
+    function addToCart(event) {
         event.preventDefault();
 
         var form = document.getElementById('addToCartForm');
@@ -117,33 +119,26 @@
         $.ajax({
             url: '@Url.Action("AddToCart", "Cart")',
             type: 'POST',
-            data: {
-                id: productId,
-                quantity: quantity
-            },
+            data: { id: productId, quantity: quantity },
             success: function (response) {
                 if (response.success) {
-                    updateCartDisplay(response.cartData);
-                    alert("Đã thêm sản phẩm vào giỏ hàng.");
+                    alert("Product added to cart.");
                 } else {
-                    alert(response.message); // Hiển thị lỗi từ server (nếu có)
+                    alert(response.message);
                 }
             },
-            error: function (xhr, status, error) {
-                alert("Có lỗi xảy ra khi thêm sản phẩm vào giỏ hàng.");
+            error: function () {
+                alert("An error occurred while adding the product to the cart.");
             }
         });
     }
 
-    function updateCartDisplay(cartData) {
-        $('#cartQuantity').text(cartData.totalQuantity);
-        $('#cartTotal').text(cartData.totalPrice);
-    }
-
+    // Add to Like functionality
     function addToLike(event) {
         event.preventDefault();
 
-        var productId = $("input[name='id']").val();
+        var form = document.getElementById('addToLikeForm');
+        var productId = form.querySelector('input[name="id"]').value;
 
         $.ajax({
             url: '@Url.Action("AddToLike", "Like")',
@@ -151,13 +146,14 @@
             data: { id: productId },
             success: function (response) {
                 if (response.success) {
-                    alert(response.message);
-                    $(".heart-icon").css("color", "red"); 
-                    alert(response.message);
+                    $(".heart-icon").css("color", "red"); // Highlight the icon
+                    alert(response.message); // Display success message
+                } else {
+                    alert(response.message); // Display error message
                 }
             },
             error: function () {
-                alert("Có lỗi khi thêm sản phẩm vào danh sách yêu thích.");
+                alert("An error occurred while adding the product to the favorites list.");
             }
         });
     }
