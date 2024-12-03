@@ -1,0 +1,36 @@
+﻿@model IEnumerable<TapHoa.Data.Dondathang>
+
+<h2>Order History</h2>
+
+@if (!Model.Any())
+{
+    <p>You have no orders.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Order Date</th>
+                <th>Total Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.Maddh</td>
+                    <td>@order.Ngaydat.ToString("dd/MM/yyyy")</td>
+                    <td>@order.Tonggia</td>
+                    <td>@order.MattddhNavigation?.Tenttddh</td>
+                    <td>
+                        <a href="@Url.Action("OrderDetails", new { id = order.Maddh })" class="btn btn-primary btn-sm">Details</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

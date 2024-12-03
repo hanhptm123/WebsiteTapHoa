@@ -1,4 +1,4 @@
-﻿using TapHoa.Data;
+using TapHoa.Data;
 
 public class TongDoanhThuViewModel
 {

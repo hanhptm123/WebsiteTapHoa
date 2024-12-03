@@ -1,0 +1,50 @@
+﻿@{
+    var order = ViewBag.Order as TapHoa.Data.Dondathang;
+    var orderDetails = ViewBag.OrderDetails as IEnumerable<TapHoa.Data.Chitietdondathang>;
+}
+
+<h2>Order Details</h2>
+
+@if (order == null)
+{
+    <p>Order information not found.</p>
+}
+else
+{
+    <div>
+        <p><strong>Order ID:</strong> @order.Maddh</p>
+        <p><strong>Order Date:</strong> @order.Ngaydat.ToString("dd/MM/yyyy")</p>
+        <p><strong>Total Price:</strong> @order.Tonggia</p>
+        <p><strong>Status:</strong> @order.MattddhNavigation?.Tenttddh</p>
+    </div>
+
+    <h3>Products in the Order</h3>
+    @if (orderDetails == null || !orderDetails.Any())
+    {
+        <p>No products in this order.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var detail in orderDetails)
+                {
+                    <tr>
+                        <td>@detail.MaspNavigation?.Tensp</td>
+                        <td>@detail.Soluong</td>
+                        <td>@detail.MaspNavigation?.Gia.ToString("C")</td>
+                        <td>@(detail.Soluong * (detail.MaspNavigation?.Gia ?? 0)).ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}

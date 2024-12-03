@@ -1,4 +1,7 @@
-﻿<!-- Page Preloder -->
+﻿<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Page Preloder -->
 <div id="preloder">
     <div class="loader"></div>
 </div>
@@ -61,6 +64,7 @@
     <div class="header__top">
         <div class="container">
             <div class="row">
+                <!-- Left Section -->
                 <div class="col-lg-6 col-md-6">
                     <div class="header__top__left">
                         <ul>
@@ -69,80 +73,86 @@
                         </ul>
                     </div>
                 </div>
+                <!-- Right Section -->
                 <div class="col-lg-6 col-md-6">
-                    <div class="header__top__right">
-                        <div class="header__top__right__auth">
-                            @if (User.Identity.IsAuthenticated && User.IsInRole("Nhanvien"))
-                            {
-                                <a href="/Admin" class="flex-c-m trans-04 p-lr-25" style="font-family: Arial; margin-right: 15px; background-color: #007bff; color: white; padding: 10px 20px; border-radius: 5px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); text-decoration: none;">
-                                    Admin Page
-                                </a>
-                            }
-                        </div>
-                        <div class="header__top__right__auth">
-                            @if (User.Identity.IsAuthenticated)
-                            {
-                                <a href="/address/addressList"><i class="fa fa-user"></i>Your Address</a>
-                            }
-                        </div>
-                        <div class="header__top__right__auth">
-                            @if (!User.Identity.IsAuthenticated)
-                            {
-                                <a href="/Accounts/Login"><i class="fa fa-user"></i> Login</a>
-                            }
-                        </div>
-                        <div class="header__top__right__auth">
-                            @if (User.Identity.IsAuthenticated && !Context.Request.Path.Value.Contains("/Accounts/Login"))
-                            {
-                                <a href="/Accounts/Logout"><i class="fa fa-user"></i>Logout</a>
-                            }
-                        </div>
+                    <div class="header__top__right d-flex justify-content-end align-items-center">
+                        <!-- Admin Page Link (Only for staff) -->
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Nhanvien"))
+                        {
+                            <a href="/Admin" class="btn btn-info me-3 rounded-pill px-4 py-2 shadow-sm d-flex align-items-center">
+                                <i class="fa fa-cogs me-2"></i> Admin Page
+                            </a>
+                        }
+
+                        <!-- User Authentication Dropdown -->
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <div class="dropdown">
+                                <button class="btn btn-light dropdown-toggle rounded-pill px-4 py-2 shadow-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa fa-user-circle me-2"></i> @User.Identity.Name
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="/Customer/Index"><i class="fa fa-user-circle"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="/Customer/OrderList"><i class="fa fa-shopping-bag"></i> Your Orders</a></li>
+                                    <li><a class="dropdown-item" href="/address/addressList"><i class="fa fa-map-marker"></i> Address</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="/accounts/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Login Link -->
+                            <a href="/accounts/login" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm">
+                                <i class="fa fa-user me-2"></i> Login
+                            </a>
+                        }
                     </div>
                 </div>
-
-
             </div>
         </div>
     </div>
+
+    <!-- Main Navigation -->
     <div class="container">
         <div class="row">
+            <!-- Logo -->
             <div class="col-lg-3">
                 <div class="header__logo">
-                    <a href="./index.html"><img src="~/LayoutUser/img/logo.png" alt=""></a>
+                    <a href="/"><img src="~/LayoutUser/img/logo.png" alt="Logo"></a>
                 </div>
             </div>
+            <!-- Navigation Menu -->
             <div class="col-lg-6">
                 <nav class="header__menu">
                     <ul>
-                        <li class="active"><a href="./index.html">Home</a></li>
-                        <li><a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ViewProduct">Shop</a></li>
-                        <li>
-                            <a href="#">Pages</a>
-                            <ul class="header__menu__dropdown">
-                                <li><a asp-area="" asp-controller="Product" asp-action="ViewProduct">View Product</a></li>
-                                <li><a asp-area="" asp-controller="Cart" asp-action="Index">Shoping Cart</a></li>
+                        <li class="active"><a href="/">Home</a></li>
+                        <li><a href="/Product/ViewProduct">Shop</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                            <ul class="dropdown-menu">
+                                <li><a href="./shop-details.html">Shop Details</a></li>
+                                <li><a href="./shoping-cart.html">Shopping Cart</a></li>
                                 <li><a href="./checkout.html">Check Out</a></li>
                                 <li><a href="./blog-details.html">Blog Details</a></li>
                             </ul>
                         </li>
-                        <li><a class="nav-link text-dark" asp-area="" asp-controller="Blog" asp-action="BlogList">Blog</a></li>
-                        <li><a class="nav-link text-dark" asp-area="" asp-controller="DailyRecipe" asp-action="ViewDailyRecipe">Daily Recipe</a></li>
+                        <li><a href="/Blog/BlogList">Blog</a></li>
                         <li><a href="./contact.html">Contact</a></li>
                     </ul>
                 </nav>
             </div>
+            <!-- Cart Section -->
             <div class="col-lg-3">
                 <div class="header__cart">
                     <ul>
-                        <li><a asp-area="" asp-controller="Like" asp-action="Index"><i class="fa fa-heart"></i> </a></li>
-                        <li><a asp-area="" asp-controller="Cart" asp-action="Index"><i class="fa fa-shopping-bag"></i></a></li>
+                        <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
+                        <li><a href="/Cart/Index"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
                     </ul>
                 </div>
             </div>
         </div>
-        <div class="humberger__open">
-            <i class="fa fa-bars"></i>
-        </div>
     </div>
 </header>
+
 <!-- Header Section End -->

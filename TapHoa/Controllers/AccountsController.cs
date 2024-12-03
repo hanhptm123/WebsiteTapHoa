@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -22,11 +22,11 @@ namespace TapHoa.Controllers
         {
             return _context.Taikhoans.Any(account => account.Matk == accountId);
         }
+
         public IActionResult Login()
         {
             return View();
         }
-   
         [HttpPost]
         public IActionResult Login(string Tendangnhap, string Matkhau)
         {
@@ -36,7 +36,7 @@ namespace TapHoa.Controllers
                 TempData["ErrorMessage"] = "Invalid username or password.";
                 return RedirectToAction("Login");
             }
-
+            HttpContext.Session.SetInt32("Matk", taikhoan.Matk);
             if (taikhoan.Chucvu == "Nhanvien")
             {
                 var nhanvien = _context.Nhanviens.FirstOrDefault(nv => nv.Matk == taikhoan.Matk);
@@ -59,8 +59,8 @@ namespace TapHoa.Controllers
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Customer account not found.";
-                    return RedirectToAction("Login");
+                    return RedirectToAction("RegisterCustomer", "Accounts", new { matk = taikhoan.Matk });
+
                 }
             }
             else
@@ -68,7 +68,6 @@ namespace TapHoa.Controllers
                 TempData["ErrorMessage"] = "Invalid role.";
                 return RedirectToAction("Login");
             }
-
 
             var claims = new List<Claim>
             {

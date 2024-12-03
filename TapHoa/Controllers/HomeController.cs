@@ -17,7 +17,10 @@ namespace TapHoa.Controllers
         {
             return View();
         }
-
+        public IActionResult Trangchu() 
+        {
+            return View(); 
+        }
         public IActionResult Privacy()
         {
             return View();

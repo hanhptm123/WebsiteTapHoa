@@ -27,6 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Views\Accounts\Login.cshtml" />
+    <None Include="Views\Accounts\Register.cshtml" />
+    <None Include="Views\Accounts\RegisterCustomer.cshtml" />
+    <None Include="Views\Customer\Index.cshtml" />
+    <None Include="Views\Customer\OrderDetails.cshtml" />
+    <None Include="Views\Customer\OrderList.cshtml" />
     <None Include="wwwroot\LayoutAdmin\.DS_Store" />
 
   </ItemGroup>
