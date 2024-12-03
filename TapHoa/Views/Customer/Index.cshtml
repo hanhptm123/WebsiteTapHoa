@@ -1,102 +1,33 @@
-@model TapHoa.Data.Khachhang
+@model IEnumerable<TapHoa.Data.Khachhang>
 
-<h2>Customer Details</h2>
+<h2>Customers</h2>
 
 <table class="table">
-    <tr>
-        <th>Name</th>
-        <td>@Model.Tenkh</td>
-    </tr>
-    <tr>
-        <th>Email</th>
-        <td>@Model.Email</td>
-    </tr>
-    <tr>
-        <th>Phone</th>
-        <td>@Model.Sdt</td>
-    </tr>
-    <tr>
-        <th>Address</th>
-        <td>@Model.Diachi</td>
-    </tr>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@customer.Tenkh</td>
+                <td>@customer.Email</td>
+                <td>@customer.Sdt</td>
+                <td>@customer.Diachi</td>
+                <td>
+                    <a href="@Url.Action("Details", "Customer", new { id = customer.Makh })" class="btn btn-info">Details</a>
+                    <a href="@Url.Action("Edit", "Customer", new { id = customer.Makh })" class="btn btn-primary">Edit</a>
+                    <a href="@Url.Action("Delete", "Customer", new { id = customer.Makh })" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
 
-<div class="d-flex">
-    <a href="@Url.Action("EditCustomer", "Customer", new { makh = Model.Makh })" class="btn btn-warning">Edit</a>
-    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">Back to Home</a>
-</div>
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        background-color: #f8f9fa;
-        margin: 0;
-        padding: 20px;
-    }
-
-    h2 {
-        text-align: center;
-        color: #333;
-        margin-bottom: 20px;
-    }
-
-    .table {
-        width: 100%;
-        max-width: 600px;
-        margin: 0 auto 20px;
-        border-collapse: collapse;
-        background: #fff;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .table th,
-    .table td {
-        padding: 12px 20px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    .table th {
-        background-color: #007bff;
-        color: white;
-        font-weight: bold;
-    }
-
-    .table tr:nth-child(even) {
-        background-color: #f2f2f2;
-    }
-
-    .d-flex {
-        display: flex;
-        justify-content: space-between;
-        max-width: 600px;
-        margin: 0 auto;
-    }
-
-    .btn {
-        padding: 10px 20px;
-        font-size: 14px;
-        border: none;
-        border-radius: 4px;
-        text-decoration: none;
-        color: white;
-        transition: background-color 0.3s;
-    }
-
-    .btn-warning {
-        background-color: #ffc107;
-    }
-
-    .btn-warning:hover {
-        background-color: #e0a800;
-    }
-
-    .btn-primary {
-        background-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-</style>
+<a href="@Url.Action("Create", "Customer")" class="btn btn-success">Create New Customer</a>
