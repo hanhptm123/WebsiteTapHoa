@@ -30,9 +30,8 @@
     <div>
         @await Html.PartialAsync("_UserHeader")
         <div style="min-height:100px; margin-bottom: 50px;">
-            @RenderBody()
             @RenderSection("breadcum", required: false)
-
+            @RenderBody()
         </div>
 
         <!-- Footer Section Begin -->
