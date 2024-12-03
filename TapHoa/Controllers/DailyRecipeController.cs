@@ -44,12 +44,13 @@ namespace TapHoa.Controllers
 
         public async Task<IActionResult> Create()
         {
+            // Lấy danh sách sản phẩm
             var products = await _context.Sanphams.ToListAsync();
-            ViewBag.Products = products; 
+            ViewBag.Products = products; // Gửi danh sách sản phẩm đến View
 
             if (products == null || !products.Any())
             {
-                
+                // Nếu không có sản phẩm nào, có thể chuyển hướng hoặc chỉ cảnh báo
                 ViewBag.ErrorMessage = "No products available. Please add products before creating a recipe.";
             }
 
@@ -64,15 +65,18 @@ namespace TapHoa.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Tạo đối tượng công thức mới
                 var newRecipe = new Congthuc
                 {
                     Ten = Name,
                     Video = VideoUrl
                 };
 
+                // Thêm công thức mới vào cơ sở dữ liệu
                 _context.Congthucs.Add(newRecipe);
                 await _context.SaveChangesAsync();
 
+                // Thêm các sản phẩm đã chọn vào công thức
                 if (SelectedProducts != null && SelectedProducts.Any())
                 {
                     foreach (var masp in SelectedProducts)
@@ -80,6 +84,7 @@ namespace TapHoa.Controllers
                         var sanpham = await _context.Sanphams.FindAsync(masp);
                         if (sanpham != null)
                         {
+                            // Liên kết sản phẩm với công thức
                             newRecipe.Masps.Add(sanpham);
                         }
                     }
@@ -90,9 +95,12 @@ namespace TapHoa.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // Nếu có lỗi, nạp lại danh sách sản phẩm để hiển thị lại view
             ViewBag.Products = await _context.Sanphams.ToListAsync();
             return View();
         }
+
+
 
         // GET: DailyRecipe/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -111,7 +119,8 @@ namespace TapHoa.Controllers
         }
 
         // POST: DailyRecipe/Edit/5
-    
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Mact,Ten,Video")] Congthuc congthuc)
@@ -153,7 +162,7 @@ namespace TapHoa.Controllers
             }
 
             var congthuc = await _context.Congthucs
-                .Include(c => c.Masps) 
+                .Include(c => c.Masps) // Lấy các sản phẩm liên kết
                 .FirstOrDefaultAsync(m => m.Mact == id);
 
             if (congthuc == null)
@@ -170,25 +179,30 @@ namespace TapHoa.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var congthuc = await _context.Congthucs
-                .Include(c => c.Masps) 
+                .Include(c => c.Masps) // Lấy các sản phẩm liên kết
                 .FirstOrDefaultAsync(m => m.Mact == id);
 
             if (congthuc != null)
             {
-                
+                // Ngắt liên kết giữa công thức và các sản phẩm
                 foreach (var sanpham in congthuc.Masps.ToList())
                 {
-                    
-                    sanpham.Macts.Remove(congthuc); 
+                    // Loại bỏ công thức khỏi danh sách Macts của sản phẩm
+                    sanpham.Macts.Remove(congthuc); // Xóa công thức khỏi sản phẩm
                 }
 
-                
+                // Xóa công thức khỏi cơ sở dữ liệu
                 _context.Congthucs.Remove(congthuc);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
+
+
+
+
         private bool CongthucExists(int id)
         {
             return _context.Congthucs.Any(e => e.Mact == id);
@@ -206,7 +220,7 @@ namespace TapHoa.Controllers
             }
 
             var congthuc = await _context.Congthucs
-                .Include(c => c.Masps) 
+                .Include(c => c.Masps) // Ensure to include the products related to the recipe
                 .FirstOrDefaultAsync(m => m.Mact == id);
 
             if (congthuc == null)
