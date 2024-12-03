@@ -21,8 +21,6 @@ public partial class TaphoaContext : DbContext
 
     public virtual DbSet<Chitiethoadon> Chitiethoadons { get; set; }
 
-    public virtual DbSet<Congthuc> Congthucs { get; set; }
-
     public virtual DbSet<Ctphieunhap> Ctphieunhaps { get; set; }
 
     public virtual DbSet<Danhgium> Danhgia { get; set; }
@@ -58,6 +56,7 @@ public partial class TaphoaContext : DbContext
     public virtual DbSet<Trangthaidondathang> Trangthaidondathangs { get; set; }
 
    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Baiviet>(entity =>
@@ -128,36 +127,6 @@ public partial class TaphoaContext : DbContext
                 .HasConstraintName("FK_CHITIETHOADON_SANPHAM");
         });
 
-        modelBuilder.Entity<Congthuc>(entity =>
-        {
-            entity.HasKey(e => e.Mact).HasName("PK__CONGTHUC__603F183A728F5152");
-
-            entity.ToTable("CONGTHUC");
-
-            entity.Property(e => e.Mact).HasColumnName("MACT");
-            entity.Property(e => e.Ten).HasColumnName("TEN");
-            entity.Property(e => e.Video).HasColumnName("VIDEO");
-
-            entity.HasMany(d => d.Masps).WithMany(p => p.Macts)
-                .UsingEntity<Dictionary<string, object>>(
-                    "Ctcongthuc",
-                    r => r.HasOne<Sanpham>().WithMany()
-                        .HasForeignKey("Masp")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_CTCONGTHUC_SANPHAM"),
-                    l => l.HasOne<Congthuc>().WithMany()
-                        .HasForeignKey("Mact")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK_CTCONGTHUC_CONGTHUC"),
-                    j =>
-                    {
-                        j.HasKey("Mact", "Masp");
-                        j.ToTable("CTCONGTHUC");
-                        j.IndexerProperty<int>("Mact").HasColumnName("MACT");
-                        j.IndexerProperty<int>("Masp").HasColumnName("MASP");
-                    });
-        });
-
         modelBuilder.Entity<Ctphieunhap>(entity =>
         {
             entity.HasKey(e => new { e.Masp, e.Mapn });
@@ -166,9 +135,6 @@ public partial class TaphoaContext : DbContext
 
             entity.Property(e => e.Masp).HasColumnName("MASP");
             entity.Property(e => e.Mapn).HasColumnName("MAPN");
-            entity.Property(e => e.Gia)
-                .HasColumnType("decimal(18, 2)")
-                .HasColumnName("GIA");
             entity.Property(e => e.Soluong).HasColumnName("SOLUONG");
             entity.Property(e => e.Thanhtien)
                 .HasColumnType("decimal(18, 2)")
@@ -245,6 +211,7 @@ public partial class TaphoaContext : DbContext
             entity.Property(e => e.Makh).HasColumnName("MAKH");
             entity.Property(e => e.Maptvc).HasColumnName("MAPTVC");
             entity.Property(e => e.Mattddh).HasColumnName("MATTDDH");
+            entity.Property(e => e.Mapttt).HasColumnName("MAPTTT");
             entity.Property(e => e.Ngaydat)
                 .HasColumnType("datetime")
                 .HasColumnName("NGAYDAT");
@@ -268,7 +235,12 @@ public partial class TaphoaContext : DbContext
             entity.HasOne(d => d.MattddhNavigation).WithMany(p => p.Dondathangs)
                 .HasForeignKey(d => d.Mattddh)
                 .HasConstraintName("FK_DONDATHANG_TRANGTHAIDONDATHANG");
+
+            entity.HasOne(d => d.MaptttNavigation).WithMany(p => p.Dondathangs)
+                .HasForeignKey(d => d.Mapttt)
+                .HasConstraintName("FK_DONDATHANG_PHUONGTHUCTHANHTOAN");
         });
+
 
         modelBuilder.Entity<Hoadon>(entity =>
         {

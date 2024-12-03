@@ -17,19 +17,39 @@ namespace TapHoa.Controllers
         {
             _context = context;
         }
+
         private bool IsAccountExist(int accountId)
         {
             return _context.Taikhoans.Any(account => account.Matk == accountId);
         }
+
+        // Feature: Login
         public IActionResult Login()
         {
             return View();
         }
-        public IActionResult Logout()
-        {
-            HttpContext.SignOutAsync();
-            return View("Login");
-        }
+        //[HttpPost]
+        //public IActionResult Login(string Tendangnhap, string Matkhau)
+        //{
+        //    var taikhoan = _context.Taikhoans.Where(t => t.Tendangnhap == Tendangnhap && t.Matkhau == Matkhau).FirstOrDefault<Taikhoan>();
+        //    if (taikhoan == null)
+        //    {
+        //        TempData["ErrorMessage"] = "Invalid username or password.";
+        //        return RedirectToAction("Login");
+        //    }
+        //    TempData["SuccessMessage"] = "Login successful! Redirecting...";
+        //    var claims = new List<Claim>
+        //    {
+        //        new Claim(ClaimTypes.Name, taikhoan.Tendangnhap),
+        //        new Claim(ClaimTypes.Role, taikhoan.Chucvu),
+        //    };
+        //    var claimsIdentity = new ClaimsIdentity(
+        //    claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        //    HttpContext.SignInAsync(
+        //    CookieAuthenticationDefaults.AuthenticationScheme,
+        //    new ClaimsPrincipal(claimsIdentity));
+        //    return RedirectToAction("Login");
+        //}
         [HttpPost]
         public IActionResult Login(string Tendangnhap, string Matkhau)
         {
@@ -39,6 +59,8 @@ namespace TapHoa.Controllers
                 TempData["ErrorMessage"] = "Invalid username or password.";
                 return RedirectToAction("Login");
             }
+
+            // Handle role-specific logic
             if (taikhoan.Chucvu == "Nhanvien")
             {
                 var nhanvien = _context.Nhanviens.FirstOrDefault(nv => nv.Matk == taikhoan.Matk);
@@ -70,17 +92,32 @@ namespace TapHoa.Controllers
                 TempData["ErrorMessage"] = "Invalid role.";
                 return RedirectToAction("Login");
             }
+
+            // Create authentication cookie
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, taikhoan.Tendangnhap),
                 new Claim(ClaimTypes.Role, taikhoan.Chucvu),
             };
+
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
             TempData["SuccessMessage"] = "Login successful!";
             return RedirectToAction("Index", "Home");
         }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("NewCustomerId");
+            HttpContext.Session.Remove("NhanvienId");
+
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            TempData["SuccessMessage"] = "You have logged out successfully.";
+            return RedirectToAction("Login", "Accounts");
+        }
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -106,6 +143,7 @@ namespace TapHoa.Controllers
                 TempData["ErrorMessage"] = "Username already exists.";
                 return RedirectToAction("Register");
             }
+
             var taikhoan = new Taikhoan
             {
                 Tendangnhap = Tendangnhap,
@@ -114,8 +152,38 @@ namespace TapHoa.Controllers
             };
             _context.Taikhoans.Add(taikhoan);
             _context.SaveChanges();
-            TempData["SuccessMessage"] = "Registration successful! Redirecting to login...";
-            return RedirectToAction("Login");
+
+            return RedirectToAction("RegisterCustomer", new { matk = taikhoan.Matk });
+        }
+
+        [HttpGet]
+        public IActionResult RegisterCustomer(int matk)
+        {
+            ViewBag.Matk = matk;
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult RegisterCustomer(int matk, string Tenkh, string Email, string Sdt, string Diachi)
+        {
+            if (string.IsNullOrEmpty(Tenkh) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Sdt) || string.IsNullOrEmpty(Diachi))
+            {
+                TempData["ErrorMessage"] = "Please fill in all fields.";
+                return RedirectToAction("RegisterCustomer", new { matk });
+            }
+            var khachhang = new Khachhang
+            {
+                Matk = matk,
+                Tenkh = Tenkh,
+                Email = Email,
+                Sdt = Sdt,
+                Diachi = Diachi
+            };
+            _context.Khachhangs.Add(khachhang);
+            _context.SaveChanges();
+
+            TempData["SuccessMessage"] = "Customer registration successful! Please log in.";
+            return RedirectToAction("Login", "Accounts");
         }
     }
 }
