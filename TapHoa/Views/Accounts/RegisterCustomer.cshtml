@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Register Customer";
+    Layout = "~/Views/Shared/_Login.cshtml";
+
+}
+
+<h2>Register Customer</h2>
+
+<form asp-action="RegisterCustomer" method="post">
+    <input type="hidden" name="matk" value="@ViewBag.Matk" />
+    <div class="form-group">
+        <label for="Tenkh">Full Name:</label>
+        <input type="text" name="Tenkh" id="Tenkh" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Email">Email:</label>
+        <input type="email" name="Email" id="Email" class="form-control" required />
+    </div>
+    <div class="form-group">
+        <label for="Sdt">Phone:</label>
+        <input type="text" name="Sdt" id="Sdt" class="form-control" required pattern="^\d{10}$" title="Phone number must be 10 digits." />
+    </div>
+    <div class="form-group">
+        <label for="Diachi">Address:</label>
+        <textarea name="Diachi" id="Diachi" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+</form>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
