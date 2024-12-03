@@ -75,7 +75,7 @@ namespace TapHoa.Controllers
 
             if (likes.Any(l => l.Masanpham == id))
             {
-                return Json(new { success = false, message = "Sản phẩm đã có trong danh sách yêu thích." });
+                return Json(new { success = false, message = "The product is already in the favorites list." });
             }
 
             likes.Add(new LikeItem
@@ -87,7 +87,34 @@ namespace TapHoa.Controllers
 
             Likes = likes; // Cập nhật lại session
 
-            return Json(new { success = true, message = "Đã thêm sản phẩm vào danh sách yêu thích." });
+            return Json(new { success = true, message = "The product has been added to the favorites list." });
         }
+        public IActionResult RemoveFromLike(int id)
+        {
+            var makh = GetCurrentAccountId();
+            if (makh == null)
+            {
+                TempData["ErrorMessage"] = "Vui lòng đăng nhập để quản lý danh sách yêu thích.";
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            var likes = Likes;  // Lấy danh sách yêu thích
+            var item = likes.SingleOrDefault(p => p.Masanpham == id);
+
+            if (item != null)
+            {
+                likes.Remove(item);  // Xóa sản phẩm khỏi danh sách yêu thích
+                Likes = likes;  // Cập nhật lại session
+                TempData["SuccessMessage"] = "Đã xóa sản phẩm khỏi danh sách yêu thích.";
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy sản phẩm trong danh sách yêu thích.";
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }
