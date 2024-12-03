@@ -23,33 +23,10 @@ namespace TapHoa.Controllers
             return _context.Taikhoans.Any(account => account.Matk == accountId);
         }
 
-        // Feature: Login
         public IActionResult Login()
         {
             return View();
         }
-        //[HttpPost]
-        //public IActionResult Login(string Tendangnhap, string Matkhau)
-        //{
-        //    var taikhoan = _context.Taikhoans.Where(t => t.Tendangnhap == Tendangnhap && t.Matkhau == Matkhau).FirstOrDefault<Taikhoan>();
-        //    if (taikhoan == null)
-        //    {
-        //        TempData["ErrorMessage"] = "Invalid username or password.";
-        //        return RedirectToAction("Login");
-        //    }
-        //    TempData["SuccessMessage"] = "Login successful! Redirecting...";
-        //    var claims = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Name, taikhoan.Tendangnhap),
-        //        new Claim(ClaimTypes.Role, taikhoan.Chucvu),
-        //    };
-        //    var claimsIdentity = new ClaimsIdentity(
-        //    claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        //    HttpContext.SignInAsync(
-        //    CookieAuthenticationDefaults.AuthenticationScheme,
-        //    new ClaimsPrincipal(claimsIdentity));
-        //    return RedirectToAction("Login");
-        //}
         [HttpPost]
         public IActionResult Login(string Tendangnhap, string Matkhau)
         {
@@ -59,8 +36,7 @@ namespace TapHoa.Controllers
                 TempData["ErrorMessage"] = "Invalid username or password.";
                 return RedirectToAction("Login");
             }
-
-            // Handle role-specific logic
+            HttpContext.Session.SetInt32("Matk", taikhoan.Matk);
             if (taikhoan.Chucvu == "Nhanvien")
             {
                 var nhanvien = _context.Nhanviens.FirstOrDefault(nv => nv.Matk == taikhoan.Matk);
@@ -83,8 +59,8 @@ namespace TapHoa.Controllers
                 }
                 else
                 {
-                    TempData["ErrorMessage"] = "Customer account not found.";
-                    return RedirectToAction("Login");
+                    return RedirectToAction("RegisterCustomer", "Accounts", new { matk = taikhoan.Matk });
+
                 }
             }
             else
@@ -93,7 +69,6 @@ namespace TapHoa.Controllers
                 return RedirectToAction("Login");
             }
 
-            // Create authentication cookie
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, taikhoan.Tendangnhap),
