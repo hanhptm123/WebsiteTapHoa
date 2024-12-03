@@ -10,6 +10,4 @@ public partial class Phuongthucthanhtoan
     public string Tenpttt { get; set; } = null!;
 
     public virtual ICollection<Hoadon> Hoadons { get; set; } = new List<Hoadon>();
-    public virtual ICollection<Dondathang> Dondathangs { get; set; } = new List<Dondathang>();
-
 }

@@ -10,7 +10,6 @@ public partial class Dondathang
     public int? Mattddh { get; set; }
 
     public int? Maptvc { get; set; }
-    public int? Mapttt {  get; set; }
 
     public string Tenkh { get; set; } = null!;
 
@@ -33,5 +32,4 @@ public partial class Dondathang
     public virtual Phuongthucvanchuyen? MaptvcNavigation { get; set; }
 
     public virtual Trangthaidondathang? MattddhNavigation { get; set; }
-    public virtual Phuongthucthanhtoan? MaptttNavigation {  get; set; }
 }
