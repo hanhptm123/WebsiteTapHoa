@@ -268,10 +268,6 @@ public partial class TaphoaContext : DbContext
             entity.HasOne(d => d.MattddhNavigation).WithMany(p => p.Dondathangs)
                 .HasForeignKey(d => d.Mattddh)
                 .HasConstraintName("FK_DONDATHANG_TRANGTHAIDONDATHANG");
-
-            entity.HasOne(d => d.MaptttNavigation).WithMany(p => p.Dondathangs)
-                .HasForeignKey(d => d.Mapttt)
-                .HasConstraintName("FK_DONDATHANG_PHUONGTHUCTHANHTOAN");
         });
 
         modelBuilder.Entity<Hoadon>(entity =>
