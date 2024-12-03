@@ -1,0 +1,61 @@
+﻿@model TongDoanhThuViewModel
+@{
+    ViewData["Title"] = "TongDoanhThuTheoThang";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .motivational-message {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .image-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tổng Doanh Thu</h1>
+        <br />
+        <p>
+            Tổng doanh thu trong tháng @ViewBag.Thang là: @String.Format("{0:#,##0}", Model.TongDoanhThu),000đ
+        </p>
+        <p class="motivational-message">"Tích tiểu thành đại"</p>
+        @* <div class="image-container"> *@
+        @*     <img src="/images/admintrangchu/7eb67744843440e5cdd97f1ba3667b27.jpg" alt="motivational image" width="400"> *@
+        @* </div> *@
+
+        <h2>Chi tiết đơn đặt hàng đã giao trong tháng:</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Mã Đơn Hàng</th>
+                    <th>Ngày Đặt Hàng</th>
+                    <th>Tổng Tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var dondathang in Model.DanhSachDonDatHang)
+                {
+                    <tr>
+                        <td>@dondathang.Maddh</td>
+                        <td>@dondathang.Ngaydat.ToShortDateString()</td> <!-- Use ToShortDateString() directly -->
+                        <td>@String.Format("{0:#,##0}", dondathang.Tonggia ?? 0),000đ</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

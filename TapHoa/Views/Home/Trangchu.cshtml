@@ -1,0 +1,61 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Place your custom CSS here */
+        .img-fluid {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-body">
+                        <img src="https://tse2.mm.bing.net/th?id=OIP.jjl2xqfKtoa5Dz43UHvuVAHaHa&pid=Api&P=0&h=220" class="img-fluid float-left" alt="Motivational Image">
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center font-weight-bold">Total Revenue by Month</h5>
+                        <form asp-action="TongDoanhThuTheoThang" asp-controller="Revenue" method="get">
+                            <div class="form-group row">
+                                <label for="month" class="col-sm-4 col-form-label text-right">Select Month:</label>
+                                <div class="col-sm-6">
+                                    <select class="form-control" name="month" id="month">
+                                        @for (int mon = 1; mon <= 12; mon++)
+                                        {
+                                            <option value="@mon">@mon</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Set the year to 2024 -->
+                            <input type="hidden" name="year" value="2024">
+                            <div class="form-group row">
+                                <div class="col-sm-6 offset-sm-4">
+                                    <button type="submit" class="btn btn-primary btn-lg">View Total Revenue</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

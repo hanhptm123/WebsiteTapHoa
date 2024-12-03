@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TapHoa.Data;
 using X.PagedList;
@@ -15,80 +15,154 @@ namespace TapHoa.Areas.Admin.Controllers
         {
             _context = context;
         }
-
-        [Route("CustomerList")]
-        public IActionResult CustomerList(int? page)
+        [Route("index")]
+        public IActionResult Index()
         {
-            int pageSize = 8;
-            int pageNumber = page == null || page < 1 ? 1 : page.Value;
-            var customers = _context.Khachhangs.AsNoTracking().OrderBy(x => x.Makh).ToPagedList(pageNumber, pageSize);
-            return View(customers);
+            // Lấy matk từ session
+            int? matk = HttpContext.Session.GetInt32("Matk");
+            if (matk == null)
+            {
+                TempData["ErrorMessage"] = "No account found in session. Please log in.";
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            // Truy xuất makh và các thuộc tính khách hàng
+            var khachhang = _context.Khachhangs.FirstOrDefault(kh => kh.Matk == matk);
+            if (khachhang == null)
+            {
+                TempData["ErrorMessage"] = "Customer not found.";
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            // Trả về view hiển thị thông tin khách hàng
+            return View(khachhang);
+        }
+        [Route("EditCustomer")]
+        public IActionResult EditCustomer()
+        {
+            // Lấy matk từ session
+            int? matk = HttpContext.Session.GetInt32("Matk");
+            if (matk == null)
+            {
+                TempData["ErrorMessage"] = "No account found in session. Please log in.";
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            // Truy xuất thông tin khách hàng
+            var khachhang = _context.Khachhangs.FirstOrDefault(kh => kh.Matk == matk);
+            if (khachhang == null)
+            {
+                TempData["ErrorMessage"] = "Customer not found.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Trả về view để chỉnh sửa thông tin khách hàng
+            return View(khachhang);
         }
 
-        [Route("Create")]
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [Route("Create")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Khachhang customer)
+        public IActionResult EditCustomer(int makh, string Tenkh, string Email, string Sdt, string Diachi)
         {
-            if (ModelState.IsValid)
+            if (string.IsNullOrEmpty(Tenkh) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Sdt) || string.IsNullOrEmpty(Diachi))
             {
-                _context.Khachhangs.Add(customer);
-                _context.SaveChanges();
-                TempData["Message"] = "Customer created successfully";
-                return RedirectToAction("CustomerList");
-            }
-            return View(customer);
-        }
-
-        [Route("Edit")]
-        [HttpGet]
-        public IActionResult Edit(int Makh)
-        {
-            var customer = _context.Khachhangs.Find(Makh);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-            return View(customer);
-        }
-
-        [Route("Edit")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Edit(Khachhang customer)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Update(customer);
-                _context.SaveChanges();
-                TempData["Message"] = "Customer updated successfully";
-                return RedirectToAction("CustomerList");
-            }
-            return View(customer);
-        }
-
-        [Route("Delete")]
-        [HttpGet]
-        public IActionResult Delete(int Makh)
-        {
-            var customer = _context.Khachhangs.Find(Makh);
-
-            if (customer == null)
-            {
-                return NotFound();
+                TempData["ErrorMessage"] = "Please fill in all fields.";
+                return RedirectToAction("EditCustomer");
             }
 
-            _context.Khachhangs.Remove(customer);
+            // Truy xuất khách hàng cần chỉnh sửa
+            var khachhang = _context.Khachhangs.FirstOrDefault(kh => kh.Makh == makh);
+            if (khachhang == null)
+            {
+                TempData["ErrorMessage"] = "Customer not found.";
+                return RedirectToAction("Index", "Home");
+            }
+
+            // Cập nhật thông tin khách hàng
+            khachhang.Tenkh = Tenkh;
+            khachhang.Email = Email;
+            khachhang.Sdt = Sdt;
+            khachhang.Diachi = Diachi;
+
+            // Lưu thay đổi vào cơ sở dữ liệu
             _context.SaveChanges();
-            TempData["Message"] = "Customer deleted successfully";
-            return RedirectToAction("CustomerList");
+
+            TempData["SuccessMessage"] = "Customer information updated successfully!";
+            return RedirectToAction("Index", "Accounts");
+        }
+        private int? GetCurrentAccountId()
+        {
+            // Lấy mã tài khoản từ session
+            return HttpContext.Session.GetInt32("NewCustomerId");
+        }
+
+        private int? GetCustomerIdFromAccountId()
+        {
+            var matk = GetCurrentAccountId();
+            if (!matk.HasValue)
+                return null;
+
+            // Truy xuất makh từ bảng tài khoản (nếu có liên kết với khách hàng)
+            var makh = _context.Khachhangs
+                .Where(kh => kh.Matk == matk.Value)
+                .Select(kh => kh.Makh)
+                .FirstOrDefault();
+
+            return makh;
+        }
+        [Route("OrderList")]
+        public IActionResult OrderList()
+        {
+            var makh = GetCustomerIdFromAccountId();
+            if (!makh.HasValue)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng.";
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            // Truy vấn danh sách đơn hàng dựa trên makh
+            var orders = _context.Dondathangs
+                .Where(dh => dh.Makh == makh.Value)
+                .Include(dh => dh.Chitietdondathangs)
+                .ThenInclude(ct => ct.MaspNavigation)
+                .Include(o => o.MattddhNavigation)
+                .OrderByDescending(dh => dh.Ngaydat)
+                .ToList();
+
+
+            return View(orders);
+        }
+
+        public IActionResult OrderDetails(int id)
+        {
+            var makh = GetCustomerIdFromAccountId();
+            if (!makh.HasValue)
+            {
+                TempData["ErrorMessage"] = "Không tìm thấy thông tin khách hàng.";
+                return RedirectToAction("Login", "Accounts");
+            }
+
+            // Lấy thông tin đơn hàng
+            var order = _context.Dondathangs
+                .Include(dh => dh.MattddhNavigation) // Nạp thông tin trạng thái đơn hàng
+                .FirstOrDefault(dh => dh.Makh == makh.Value && dh.Maddh == id);
+
+            if (order == null)
+            {
+                TempData["ErrorMessage"] = "Đơn hàng không tồn tại hoặc bạn không có quyền xem.";
+                return RedirectToAction("OrderList");
+            }
+
+            // Lấy thông tin chi tiết đơn hàng
+            var orderDetails = _context.Chitietdondathangs
+                .Include(ct => ct.MaspNavigation) // Nạp thông tin sản phẩm
+                .Where(ct => ct.Maddh == id)
+                .ToList();
+
+            // Sử dụng ViewBag để truyền dữ liệu cho view
+            ViewBag.Order = order; // Truyền thông tin đơn hàng
+            ViewBag.OrderDetails = orderDetails; // Truyền danh sách chi tiết đơn hàng
+
+            return View();
         }
     }
 }

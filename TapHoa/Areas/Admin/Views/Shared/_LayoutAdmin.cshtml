@@ -70,13 +70,13 @@
                             <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
                         </a>
                     </li>
+                    <!-- Product Management -->
                     <li class="nav-item">
-                        <a class="nav-link" href="../../index.html">
+                        <a class="nav-link" asp-controller="Home" asp-action="Trangchu">
                             <span class="menu-title">Revenue managenment</span>
-                            <i class="mdi mdi-home menu-icon"></i>
+                            <i class="mdi mdi-contacts menu-icon"></i>
                         </a>
                     </li>
-                    <!-- Product Management -->
                     <li class="nav-item">
                         <a class="nav-link" data-bs-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
                             <span class="menu-title">Product managenment</span>
@@ -137,6 +137,15 @@
                             <i class="mdi mdi-contacts menu-icon"></i>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Home" asp-action="Index">
+                            <div class="d-flex align-items-center">
+                                <i class="mdi mdi-arrow-left menu-icon me-2"></i>  <!-- Updated icon -->
+                                <span class="menu-title">Back to User</span>
+                            </div>
+                        </a>
+                    </li>
+
                 </ul>
             </nav>
 
