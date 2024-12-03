@@ -94,7 +94,6 @@
 </section>
 
 <script>
-    // Cập nhật số lượng
     function updateQuantity(productId, change) {
         let input = document.querySelector(`#quantityInput-${productId}`);
         let quantity = parseInt(input.value) + change;
@@ -103,8 +102,6 @@
             updateTotal();
         }
     }
-
-    // Cập nhật tổng giỏ hàng
     function updateTotal() {
         let totalBeforeDiscount = 0;
         let totalAfterDiscount = 0;
@@ -128,19 +125,15 @@
         document.getElementById('totalBeforeDiscount').textContent = totalBeforeDiscount.toFixed(2);
         document.getElementById('totalAfterDiscount').textContent = totalAfterDiscount.toFixed(2);
     }
-
-    // Cập nhật khi nhấn nút cộng hoặc trừ
     document.querySelectorAll('.qtybtn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             let productId = this.closest('tr').getAttribute('data-id');
             if (this.classList.contains('inc')) {
-                updateQuantity(productId, 1);  // Tăng số lượng
+                updateQuantity(productId, 1);  
             } else if (this.classList.contains('dec')) {
-                updateQuantity(productId, -1); // Giảm số lượng
+                updateQuantity(productId, -1); 
             }
         });
     });
-
-    // Update totals on page load
     document.addEventListener('DOMContentLoaded', updateTotal);
 </script>

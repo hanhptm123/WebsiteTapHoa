@@ -13,7 +13,6 @@
                 </div>
             </div>
             <div class="col-lg-9 col-md-7">
-                <!-- Product Listing -->
                 @if (Model != null && Model.Any())
                 {
                     <div class="row">
@@ -26,14 +25,13 @@
                                         <ul class="product__item__pic__hover">
                                             <li>
                                                 <a href="javascript:void(0);" class="add-to-like" data-id="@item.Masp">
-                                                    <i class="fa fa-heart-o"></i>
+                                                    <i class="icon fa fa-heart-o"></i>
                                                 </a>
                                             </li>
-                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
+                                            <li><a href="#"><i class="icon fa fa-retweet"></i></a></li>
                                             <li>
-                                                <!-- Thay đổi thành liên kết để thêm vào giỏ hàng -->
                                                 <a href="javascript:void(0);" class="add-to-cart" data-id="@item.Masp" data-quantity="1">
-                                                    <i class="fa fa-shopping-cart"></i>
+                                                    <i class="icon fa fa-shopping-cart"></i>
                                                 </a>
                                             </li>
                                         </ul>
@@ -43,13 +41,11 @@
                                         <div class="product__item__price">
                                             @if (item.MakmNavigation != null)
                                             {
-                                                <!-- Giá sau giảm -->
-                                                <span>@(item.Gia * (1 - (decimal)(item.MakmNavigation.Phantramgiam / 100)))</span>
-                                                <span class="original-price" style="text-decoration: line-through;">@item.Gia</span>
+                                                <span>$@(item.Gia * (1 - (decimal)(item.MakmNavigation.Phantramgiam / 100)))</span>
+                                                <span class="original-price" style="text-decoration: line-through;">$@item.Gia</span>
                                             }
                                             else
                                             {
-                                                <!-- Giá không giảm -->
                                                 <span>@item.Gia</span>
                                             }
                                         </div>
@@ -71,24 +67,16 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            // Add to Cart Button Click
             $(".add-to-cart").click(function () {
                 var productId = $(this).data("id");
                 var quantity = $(this).data("quantity");
-
-                // Make AJAX call to add product to the cart
                 $.ajax({
                     url: '@Url.Action("AddToCart", "Cart")',
                     type: 'POST',
                     data: { id: productId, quantity: quantity },
                     success: function (response) {
                         if (response.success) {
-                            // Update cart summary (example: total quantity, total price)
                             alert("Product added to cart successfully!");
-
-                            // Optionally, update cart UI elements here
-                            // Example: $("#cart-total-quantity").text(response.cartData.totalQuantity);
-                            // Example: $("#cart-total-price").text(response.cartData.totalPrice);
                         } else {
                             alert(response.message);
                         }
@@ -99,7 +87,6 @@
                 });
             });
 
-            // Add to Like Button Click
             $(".add-to-like").click(function () {
                 var productId = $(this).data("id");
 
@@ -110,7 +97,6 @@
                     success: function (response) {
                         if (response.success) {
                             alert(response.message);
-                            // window.location.href = '/Like/Index'; 
                         } else {
                             alert(response.message); 
                         }
