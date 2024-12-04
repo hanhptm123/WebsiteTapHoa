@@ -27,7 +27,7 @@ else
                     <td>@order.Tonggia</td>
                     <td>@order.MattddhNavigation?.Tenttddh</td>
                     <td>
-                        <a href="@Url.Action("OrderDetails", new { id = order.Maddh })" class="btn btn-primary btn-sm">Details</a>
+                        <a href="@Url.Action("OrderDetails", "Checkout", new { id = order.Maddh })" class="btn btn-primary btn-sm">Details</a>
                     </td>
                 </tr>
             }

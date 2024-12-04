@@ -15,7 +15,6 @@ namespace TapHoa.Controllers
             _context = context;
         }
 
-        // Lấy mã tài khoản hiện tại từ session
         private int? GetCurrentAccountId()
         {
             return HttpContext.Session.GetInt32("NewCustomerId");
@@ -44,7 +43,6 @@ namespace TapHoa.Controllers
             }
         }
 
-        // Hiển thị danh sách yêu thích
         public IActionResult Index()
         {
             var matk = GetCurrentAccountId();
@@ -71,7 +69,7 @@ namespace TapHoa.Controllers
                 return Json(new { success = false, message = "Không tìm thấy sản phẩm." });
             }
 
-            var likes = Likes; // Lấy danh sách yêu thích hiện tại
+            var likes = Likes;
 
             if (likes.Any(l => l.Masanpham == id))
             {
@@ -85,7 +83,7 @@ namespace TapHoa.Controllers
                 Hinhanh = product.Hinhanh
             });
 
-            Likes = likes; // Cập nhật lại session
+            Likes = likes;
 
             return Json(new { success = true, message = "The product has been added to the favorites list." });
         }
@@ -98,13 +96,13 @@ namespace TapHoa.Controllers
                 return RedirectToAction("Login", "Accounts");
             }
 
-            var likes = Likes;  // Lấy danh sách yêu thích
+            var likes = Likes;  
             var item = likes.SingleOrDefault(p => p.Masanpham == id);
 
             if (item != null)
             {
-                likes.Remove(item);  // Xóa sản phẩm khỏi danh sách yêu thích
-                Likes = likes;  // Cập nhật lại session
+                likes.Remove(item);  
+                Likes = likes; 
                 TempData["SuccessMessage"] = "Đã xóa sản phẩm khỏi danh sách yêu thích.";
             }
             else

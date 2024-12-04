@@ -47,4 +47,7 @@ else
             </tbody>
         </table>
     }
+    <form action="@Url.Action("CancelOrder", "Checkout", new { id = order.Maddh })" method="post" style="margin-top: 20px;">
+        <button type="submit" class="btn btn-danger">Cancel Order</button>
+    </form>
 }
