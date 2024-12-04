@@ -41,7 +41,7 @@ else
                         <td>@detail.MaspNavigation?.Tensp</td>
                         <td>@detail.Soluong</td>
                         <td>@detail.MaspNavigation?.Gia.ToString("C")</td>
-                        <td>@(detail.Soluong * (detail.MaspNavigation?.Gia ?? 0)).ToString("C")</td>
+                        <td>@(detail.Soluong * (detail.MaspNavigation?.Gia ?? 0))</td>
                     </tr>
                 }
             </tbody>
